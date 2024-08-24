@@ -39,7 +39,7 @@ stream = ollama.chat(
     stream=True,
 )
 
-embedded_query = ollama.embeddings(model='llama3.1', prompt='I want products with minimum weight of 500grams')['embedding']
+embedded_query = ollama.embeddings(model='llama3.1', prompt='I want products from J')['embedding']
 
 print("Shape of embedded_query:", np.array(embedded_query).shape)
 print("Shape of embedded_products:", np.array(embedded_products).shape)
