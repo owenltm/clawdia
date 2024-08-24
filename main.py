@@ -1,4 +1,6 @@
 from datetime import date
+import ollama
+import numpy as np
 
 class Product:
     def __init__(self, id: int, check_in_date: date, weight: int, supplier: str):
@@ -9,6 +11,7 @@ class Product:
 
     def to_text(self):
         return f"Product of id: {self.id}, with weight of {self.weight} grams, checked in on {self.check_in_date} from {self.supplier}"
+        # return f"Product id {self.id} weight is {self.weight} grams"
     
 # Hardcoded list of 10 Product objects
 products = [
@@ -24,5 +27,33 @@ products = [
     Product(10, date(2023, 10, 15), 400, "J"),
 ]
 
-for product in products:
-    print(product.to_text())
+embedded_products = [None] * len(products)
+
+for i, product in enumerate(products):
+    embedded_products[i] = ollama.embeddings(model='llama3.1', prompt=products[i].to_text())['embedding']
+    print(f"{product.to_text()}")
+
+stream = ollama.chat(
+    model='llama3.1',
+    messages=[{'role': 'user', 'content': 'Why is the sky blue?'}],
+    stream=True,
+)
+
+embedded_query = ollama.embeddings(model='llama3.1', prompt='I want products with minimum weight of 500grams')['embedding']
+
+print("Shape of embedded_query:", np.array(embedded_query).shape)
+print("Shape of embedded_products:", np.array(embedded_products).shape)
+# Normalize the query vector
+normalized_query = embedded_query / np.linalg.norm(embedded_query)
+
+# Normalize each product vector
+normalized_products = embedded_products / np.linalg.norm(embedded_products, axis=1, keepdims=True)
+
+# Compute similarity scores
+similarity = normalized_query @ normalized_products.T
+
+sorted_idx = (normalized_query @ normalized_products.T).argsort()[::-1]
+
+for i, idx in enumerate(sorted_idx):
+    print(f"[{i}] Kesamaan: {similarity[idx]:.3f} | {products[idx].to_text()}")
+    print()
