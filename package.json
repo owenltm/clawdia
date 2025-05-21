@@ -1,0 +1,30 @@
+{
+  "name": "clawdia",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "mastra build",
+    "dev": "mastra dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "type": "module",
+  "dependencies": {
+    "@ai-sdk/groq": "^1.2.8",
+    "@mastra/core": "^0.8.3",
+    "@mastra/memory": "^0.2.10",
+    "kysely": "^0.28.1",
+    "mastra": "^0.4.9",
+    "mysql2": "^3.14.0",
+    "zod": "^3.24.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "drizzle-kit": "^0.31.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3"
+  }
+}
