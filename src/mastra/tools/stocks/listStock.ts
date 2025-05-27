@@ -1,4 +1,4 @@
-import { listAllCrab } from "@/src/repository/crabRepository";
+import { listCurrentStock } from "@/src/repository/crabRepository";
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 
@@ -10,7 +10,7 @@ export const listStock = createTool({
     offset: z.number().optional(),
   }),
   execute: async ({context: { limit, offset }}) => {
-    const crabs = await listAllCrab(limit, offset);
+    const crabs = await listCurrentStock(limit);
     return crabs;
   },
 });

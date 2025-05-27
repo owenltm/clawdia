@@ -1,7 +1,7 @@
 import { groq } from "@ai-sdk/groq";
 import { Agent } from "@mastra/core/agent";
 import { Memory } from "@mastra/memory";
-import { listStock } from "../tools/stocks/listStock";
+import tools from "../tools";
 
 const clawdiaMemory = new Memory();
 
@@ -15,6 +15,6 @@ export const ClawdiaAgent = new Agent({
   model: groq("llama-3.3-70b-versatile"),
   memory: clawdiaMemory,
   tools: {
-    listStock
+    ...tools
   },
 });

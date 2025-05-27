@@ -17,15 +17,22 @@ export interface CrabsTable {
   box: string
   weight: number
   supplier: string
-  orderdate: Date
+  orderdt: Date
+  exitdt: Date | null
 }
 
 export interface CashTable {
   id: Generated<number>
-  amount: number
-  description: string
-  date: Date
-  type: string
+  trdt: Date | null
+  invno: string | null
+  trtype: string | null
+  tramt: number | null
+  qty: number | null
+  price: number | null
+  snotes: string | null
+  create_time: Date | null
+  supplier: string | null
+  trgrp: string | null
 }
 
 export type Crabs = Selectable<CrabsTable>
