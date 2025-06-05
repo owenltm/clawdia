@@ -14,11 +14,13 @@ export interface Database {
 
 export interface CrabsTable {
   id: Generated<number>
-  box: string
+  boxid: string
   weight: number
   supplier: string
   orderdt: Date
   exitdt: Date | null
+  exitweight: number | null
+  exittype: string | null
 }
 
 export interface CashTable {

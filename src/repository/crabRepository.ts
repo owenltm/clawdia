@@ -2,20 +2,10 @@ import { sql } from 'kysely'
 import { db } from '@/src/db/database'
 import { Crabs } from '@/src/db/types'
 
-const currentStock = db
-  .with('current_stock', db => 
-    db.selectFrom('crabs')
-      .selectAll()
-      .select(({ fn }) => [
-        sql<number>`ROW_NUMBER() OVER (PARTITION BY boxid ORDER BY orderdt DESC)`.as('rn')
-      ])
-  )
-  .selectFrom('current_stock')
+const currentStock = db.selectFrom('crabs')
   .selectAll()
-  .where(({ eb, and }) => and([
-    eb('rn', '=', 1),
-    eb('exitdt', 'is', null)
-  ]));
+  .where('exitdt', 'is', null)
+  .orderBy('boxid', 'asc');
 
 export const listCurrentStock = async (
   limit?: number,
@@ -30,8 +20,8 @@ export const listCurrentStock = async (
   return result;
 }
 
-export const inputStock = async (
-  boxid: string,
+export const storeNewStock = async (
+  boxid: string | null,
   weight: number,
   supplier: string,
   orderdt: Date
@@ -39,19 +29,26 @@ export const inputStock = async (
   throw new Error('Not implemented');
 }
 
-export const outputStock = async (
+export const updateStockExit = async (
   boxid: string,
-  exitdt: Date,
+  exitdt: string,
   exitWeight: number,
   exitType: string
 ) => {
-  throw new Error('Not implemented');
+  return await db.updateTable('crabs')
+    .set({
+      exitdt: new Date(exitdt),
+      exitweight: exitWeight,
+      exittype: exitType
+    })
+    .where('boxid', '=', boxid)
+    .executeTakeFirst();
 }
 
 export const getStockByBoxid = async (
   boxid: string
 ): Promise<Crabs | undefined> => {
-  throw new Error('Not implemented');
+  return await currentStock.where('boxid', '=', boxid).executeTakeFirst();
 }
 
 export const getStockById = async (
