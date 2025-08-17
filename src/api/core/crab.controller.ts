@@ -1,47 +1,79 @@
 import { Router, Request, Response, NextFunction } from "express";
+import { crabService } from "../../modules/crabs/crab.service";
 
 // Router for Crabs. Mount as: app.use("/crabs", crabRouter)
 export const crabRouter = Router();
 
 // List all crabs
-crabRouter.get("/", async (req: Request, res: Response, _next: NextFunction) => {
-  // TODO: implement listing logic
-  res.status(200).json({ message: "List crabs - not implemented" });
+crabRouter.get("/", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { status, boxId, orderBy, direction } = req.query;
+    const data = await crabService.list({
+      status: status as any,
+      boxId: boxId === undefined ? undefined : boxId === "null" ? null : Number(boxId),
+      orderBy: orderBy as any,
+      direction: direction as any,
+    });
+    res.status(200).json(data);
+  } catch (err) {
+    next(err);
+  }
 });
 
 // Get a single crab by ID
-crabRouter.get("/:id", async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = req.params;
-  // TODO: implement fetch logic
-  res.status(200).json({ message: "Get crab - not implemented", id });
+crabRouter.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = Number(req.params.id);
+    const item = await crabService.get(id);
+    if (!item) return res.status(404).json({ message: "Not Found" });
+    res.status(200).json(item);
+  } catch (err) {
+    next(err);
+  }
 });
 
 // Create a new crab
-crabRouter.post("/", async (req: Request, res: Response, _next: NextFunction) => {
-  const payload = req.body;
-  // TODO: implement create logic
-  res.status(201).json({ message: "Create crab - not implemented", payload });
+crabRouter.post("/", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = await crabService.create(req.body);
+    res.status(201).json({ id });
+  } catch (err) {
+    next(err);
+  }
 });
 
 // Replace a crab by ID
-crabRouter.put("/:id", async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = req.params;
-  const payload = req.body;
-  // TODO: implement replace logic
-  res.status(200).json({ message: "Replace crab - not implemented", id, payload });
+crabRouter.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = Number(req.params.id);
+    const ok = await crabService.update(id, req.body);
+    if (!ok) return res.status(404).json({ message: "Not Found" });
+    res.status(200).json({ updated: true });
+  } catch (err) {
+    next(err);
+  }
 });
 
 // Partially update a crab by ID
-crabRouter.patch("/:id", async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = req.params;
-  const payload = req.body;
-  // TODO: implement patch logic
-  res.status(200).json({ message: "Update crab - not implemented", id, payload });
+crabRouter.patch("/:id", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = Number(req.params.id);
+    const ok = await crabService.update(id, req.body);
+    if (!ok) return res.status(404).json({ message: "Not Found" });
+    res.status(200).json({ updated: true });
+  } catch (err) {
+    next(err);
+  }
 });
 
 // Delete a crab by ID
-crabRouter.delete("/:id", async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = req.params;
-  // TODO: implement delete logic
-  res.status(200).json({ message: "Delete crab - not implemented", id });
+crabRouter.delete("/:id", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = Number(req.params.id);
+    const ok = await crabService.remove(id);
+    if (!ok) return res.status(404).json({ message: "Not Found" });
+    res.status(200).json({ deleted: true });
+  } catch (err) {
+    next(err);
+  }
 });

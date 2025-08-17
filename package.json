@@ -5,7 +5,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun --watch src/index.ts",
-    "start": "bun src/index.ts"
+    "start": "bun src/index.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +16,7 @@
   "type": "module",
   "devDependencies": {
     "@types/node": "^24.3.0",
+    "drizzle-kit": "^0.31.4",
     "mastra": "^0.10.21",
     "tsx": "^4.20.4",
     "typescript": "^5.9.2"
@@ -21,7 +24,10 @@
   "dependencies": {
     "@ai-sdk/google": "^2.0.6",
     "@mastra/core": "^0.13.2",
+    "dotenv": "^17.2.1",
+    "drizzle-orm": "^0.44.4",
     "express": "^5.1.0",
+    "mysql2": "^3.14.3",
     "zod": "^3.25.76"
   }
 }
