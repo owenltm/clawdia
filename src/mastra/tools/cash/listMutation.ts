@@ -8,8 +8,8 @@ export const listMutation = createTool({
   inputSchema: z.object({
     limit: z.number().optional(),
   }),
-  execute: async ({context: {  }}) => {
-    const cash = await listAllCash();
+  execute: async ({context: { limit }}) => {
+    const cash = await listAllCash(limit);
     return cash;
   },
 });
