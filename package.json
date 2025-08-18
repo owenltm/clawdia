@@ -7,7 +7,8 @@
     "dev": "bun --watch src/index.ts",
     "start": "bun src/index.ts",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "db:regenerate-last": "node -e \"const fs = require('fs'); const files = fs.readdirSync('./drizzle').filter(f => f.endsWith('.sql')); const lastFile = files[files.length - 1]; if (lastFile) { fs.unlinkSync(`./drizzle/${lastFile}`); }\" && npm run db:generate"
   },
   "keywords": [],
   "author": "",

@@ -34,7 +34,7 @@ export const crabs = mysqlTable(
     weight: decimal("weight", { precision: 10, scale: 2 }).notNull(),
     supplier: varchar("supplier", { length: 255 }).notNull(),
     status: mysqlEnum("status", ["in", "sold", "dead"]).notNull(),
-    checkInDate: date("check_in_date").notNull().default(sql`CURRENT_DATE`),
+    checkInDate: date("check_in_date").notNull().default(sql`(CURRENT_DATE)`),
     boxId: int("box_id").references(() => boxes.id),
     createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow().onUpdateNow(),
