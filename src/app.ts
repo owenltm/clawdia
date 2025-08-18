@@ -9,7 +9,11 @@ app.use(express.json());
 
 // Root route
 app.get("/", (req: Request, res: Response) => {
-  res.send("Hello from Express on port 3000!");
+  res.json({
+    status: "running",
+    message: "Clawdia API Service",
+    timestamp: new Date().toISOString(),
+  });
 });
 
 // Feature routes
