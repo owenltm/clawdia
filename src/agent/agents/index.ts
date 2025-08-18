@@ -1,4 +1,3 @@
-import { groq } from "@ai-sdk/groq";
 import { google } from "@ai-sdk/google";
 import { Agent } from "@mastra/core/agent";
 import { Memory } from "@mastra/memory";
