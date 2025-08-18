@@ -1,4 +1,4 @@
-import { relations, InferInsertModel, InferSelectModel } from "drizzle-orm";
+import { sql, relations, InferInsertModel, InferSelectModel } from "drizzle-orm";
 import {
   mysqlTable,
   int,
@@ -20,7 +20,10 @@ export const boxes = mysqlTable(
     maxFill: int("max_fill").notNull().default(1),
     createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow().onUpdateNow(),
-  }
+  },
+  (table) => ({
+    statusIdx: index("idx_boxes_status").on(table.status),
+  })
 );
 
 // Crabs table
@@ -31,7 +34,7 @@ export const crabs = mysqlTable(
     weight: decimal("weight", { precision: 10, scale: 2 }).notNull(),
     supplier: varchar("supplier", { length: 255 }).notNull(),
     status: mysqlEnum("status", ["in", "sold", "dead"]).notNull(),
-    checkInDate: date("check_in_date").notNull(),
+    checkInDate: date("check_in_date").notNull().default(sql`CURRENT_DATE`),
     boxId: int("box_id").references(() => boxes.id),
     createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow().onUpdateNow(),
@@ -39,6 +42,7 @@ export const crabs = mysqlTable(
   (table) => ({
     boxIdIdx: index("idx_crabs_box_id").on(table.boxId),
     statusIdx: index("idx_crabs_status").on(table.status),
+    checkInDateIdx: index("idx_crabs_check_in_date").on(table.checkInDate),
   })
 );
 
