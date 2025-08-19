@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import { boxRouter } from "./api/core/box.controller";
 import { crabRouter } from "./api/core/crab.controller";
+import { financeRouter } from "./api/core/finance.controller";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.get("/", (req: Request, res: Response) => {
 // Feature routes
 app.use("/core/boxes", boxRouter);
 app.use("/core/crabs", crabRouter);
+app.use("/core/finance", financeRouter);
 
 // 404 handler
 app.use((req: Request, res: Response) => {
