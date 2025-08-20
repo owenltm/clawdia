@@ -1,13 +1,18 @@
 import { Router, Request, Response, NextFunction } from "express";
 
-// Router for Boxes. Mount as: app.use("/boxes", boxRouter)
-export const boxRouter = Router();
+import { mastra } from '@/src/agent/index';
+
+// Router for Boxes. Mount as: app.use("/agent", agentRouter)
+export const agentRouter = Router();
 
 // List all boxes
-boxRouter.get("/", async (_req: Request, res: Response, next: NextFunction) => {
+agentRouter.get("/", async (_req: Request, res: Response, next: NextFunction) => {
   try {
-    
-    res.status(200).json({});
+    const agent = mastra.getAgent("ClawdiaAgent");
+    const result = await agent.generate("Hello, how are you?");
+    res.status(200).json({
+      result: result.text,
+    });
   } catch (err) {
     next(err);
   }

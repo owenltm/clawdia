@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import { boxRouter } from "./api/core/box.controller";
 import { crabRouter } from "./api/core/crab.controller";
 import { financeRouter } from "./api/core/finance.controller";
+import { agentRouter } from "./api/agent/agent.controller";
 
 const app = express();
 
@@ -16,6 +17,9 @@ app.get("/", (req: Request, res: Response) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+// Agent routes
+app.use("/agent", agentRouter);
 
 // Feature routes
 app.use("/core/boxes", boxRouter);
