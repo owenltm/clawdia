@@ -1,6 +1,6 @@
 import type { FinanceJournal } from "../../db/schema";
 import { FinanceRepository } from "./finance.repository";
-import type { CreateFinanceInput, UpdateFinanceInput, ListFinanceParams } from "../history/types";
+import type { CreateFinanceInput, UpdateFinanceInput, ListFinanceParams } from "./types";
 
 export class FinanceService {
   async list(params: ListFinanceParams = {}): Promise<FinanceJournal[]> {

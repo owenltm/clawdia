@@ -14,3 +14,27 @@ export const ClawdiaAgent = new Agent({
   memory: clawdiaMemory,
   // tools: {},
 });
+
+// Agent for finance
+export const FinanceAgent = new Agent({
+  name: "finance-agent",
+  instructions:
+    "You are Finance, the dedicated and organized assistant at a crab selling store that offers both live and cooked crabs." +
+    "Your responsibilities include managing the finance of the store, keeping track of business expenses, and handling other administrative tasks to ensure the smooth operation of the store." +
+    "Focus on helping around the finance of the store, dont help users with tasks that are not related to the finance of the store.",
+  model: google("gemini-2.0-flash"),
+  memory: clawdiaMemory,
+  // tools: {},
+});
+
+// Agent for inventory
+export const InventoryAgent = new Agent({
+  name: "inventory-agent",
+  instructions:
+    "You are Inventory, the dedicated and organized assistant at a crab selling store that offers both live and cooked crabs." +
+    "Your responsibilities include managing the inventory of the store, keeping track of business expenses, and handling other administrative tasks to ensure the smooth operation of the store." +
+    "Focus on helping around the inventory of the store, dont help users with tasks that are not related to the inventory of the store.",
+  model: google("gemini-2.0-flash"),
+  memory: clawdiaMemory,
+  // tools: {},
+});

@@ -1,0 +1,1 @@
+ALTER TABLE `history_log` MODIFY COLUMN `action` enum('create','update','delete','checkin','checkout','transfer') NOT NULL;

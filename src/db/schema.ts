@@ -56,7 +56,7 @@ export const historyLog = mysqlTable(
     id: int("id").autoincrement().primaryKey(),
     entityType: mysqlEnum("entity_type", ["crab", "box"]).notNull(),
     entityId: int("entity_id").notNull(),
-    action: mysqlEnum("action", ["checkin", "checkout", "death", "move"]).notNull(),
+    action: mysqlEnum("action", ["create", "update", "delete", "checkin", "checkout", "transfer"]).notNull(),
     data: varchar("data", { length: 255 }).notNull(),
     createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   },
