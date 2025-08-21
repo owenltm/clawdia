@@ -13,6 +13,11 @@ export const BoxRepository = {
     return rows[0];
   },
 
+  async getByLabel(label: string): Promise<Box | undefined> {
+    const rows = await db.select().from(boxes).where(eq(boxes.label, label)).limit(1);
+    return rows[0];
+  },
+
   async create(data: CreateBoxInput): Promise<number> {
     const res = await db.insert(boxes).values(data as NewBox);
     const resultObj: any = Array.isArray(res) ? res[0] : res;

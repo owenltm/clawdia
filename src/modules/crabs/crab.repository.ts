@@ -28,6 +28,11 @@ export const CrabRepository = {
     return rows[0];
   },
 
+  async getByBoxId(boxId: number): Promise<Crab> {
+    const rows = await db.select().from(crabs).where(eq(crabs.boxId, boxId)).limit(1);
+    return rows[0];
+  },
+
   async create(data: CreateCrabInput): Promise<number> {
     const res = await db.insert(crabs).values(data as NewCrab);
     const resultObj: any = Array.isArray(res) ? res[0] : res;

@@ -14,6 +14,10 @@ export class BoxService {
     return BoxRepository.get(id);
   }
 
+  async getByLabel(label: string): Promise<Box | undefined> {
+    return BoxRepository.getByLabel(label);
+  }
+
   async create(data: CreateBoxInput): Promise<number> {
     const newBoxId = await BoxRepository.create(data);
 

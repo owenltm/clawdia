@@ -36,6 +36,8 @@ src/
 ├── modules/        # Feature modules
 │   ├── boxes/      # Box management
 │   └── crabs/      # Crab management
+├── usecases/       # Application modules
+|   └── inventory   # Inventory management
 └── index.ts        # Application entry point
 ```
 

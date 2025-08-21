@@ -6,10 +6,10 @@ import { mastra } from '@/src/agent/index';
 export const agentRouter = Router();
 
 // List all boxes
-agentRouter.get("/", async (_req: Request, res: Response, next: NextFunction) => {
+agentRouter.post("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const agent = mastra.getAgent("ClawdiaAgent");
-    const result = await agent.generate("Hello, how are you?");
+    const result = await agent.generate(req.body.query);
     res.status(200).json({
       result: result.text,
     });

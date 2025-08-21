@@ -13,7 +13,7 @@ export const callFinanceAgentTool = createTool({
   execute: async ({ context, mastra }) => {
     const { topic } = context;
  
-    const agent = mastra!.getAgent("finance-agent");
+    const agent = mastra!.getAgent("FinanceAgent");
     const result = await agent!.generate(`Help complete user's request of ${topic}`);
  
     return {

@@ -14,6 +14,10 @@ export class CrabService {
     return CrabRepository.get(id);
   }
 
+  async getByBoxId(boxId: number): Promise<Crab> {
+    return CrabRepository.getByBoxId(boxId);
+  }
+
   async create(data: CreateCrabInput): Promise<number> {
     const newCrabId = await CrabRepository.create(data);
 

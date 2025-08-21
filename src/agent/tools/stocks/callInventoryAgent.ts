@@ -13,7 +13,7 @@ export const callInventoryAgentTool = createTool({
   execute: async ({ context, mastra }) => {
     const { topic } = context;
 
-    const agent = mastra!.getAgent("inventory-agent");
+    const agent = mastra!.getAgent("InventoryAgent");
     const result = await agent!.generate(`Help complete user's request of ${topic}`);
 
     return {
