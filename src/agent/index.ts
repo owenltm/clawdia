@@ -3,7 +3,7 @@ import { ClawdiaAgent, FinanceAgent, InventoryAgent } from './agents';
 
 export const mastra = new Mastra({
   telemetry: {
-    enabled: false,
+    enabled: process.env.NODE_ENV != 'production',
   },
   agents: {ClawdiaAgent, FinanceAgent, InventoryAgent},
 })

@@ -1,0 +1,1 @@
+ALTER TABLE `finance_journal` MODIFY COLUMN `category` enum('sales','other_revenue','supplies','bills','stock','maintenance') NOT NULL;

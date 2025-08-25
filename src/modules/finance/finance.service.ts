@@ -1,4 +1,4 @@
-import type { FinanceJournal } from "../../db/schema";
+import type { FinanceJournal } from "./finance.schema";
 import { FinanceRepository } from "./finance.repository";
 import type { CreateFinanceInput, UpdateFinanceInput, ListFinanceParams } from "./types";
 

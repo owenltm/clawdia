@@ -16,8 +16,6 @@ COPY . .
 
 # Environment
 ENV NODE_ENV=production
-ENV DATABASE_URL=""
-ENV GOOGLE_GENERATIVE_AI_API_KEY=""
 
 # The app listens on PORT (default 3000)
 ENV PORT=3000

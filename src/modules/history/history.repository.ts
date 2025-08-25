@@ -1,6 +1,6 @@
 import { and, asc, desc, eq, gte, lte } from "drizzle-orm";
 import { db } from "../../db";
-import { historyLog, type HistoryLog, type NewHistoryLog } from "../../db/schema";
+import { historyLog, type HistoryLog, type NewHistoryLog } from "./history.schema";
 import type { CreateHistoryInput, UpdateHistoryInput, ListHistoryParams } from "./types";
 
 export const HistoryRepository = {

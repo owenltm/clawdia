@@ -2,12 +2,13 @@ import { z } from "zod";
 import { createTool } from "@mastra/core/tools";
 
 import { inventoryUseCase } from "@/src/usecases/inventory/inventory.usecase";
+import { CrabStatus } from "@/src/modules/crabs/types";
 
 export const crabCheckOut = createTool({
   id: "Crab Check Out",
   inputSchema: z.object({
     "boxLabel": z.string().max(10).describe("Label of the box where the crab is checked out from"),
-    "status": z.enum(["sold", "dead"]).describe("Status of the crab being checked out"),
+    "status": z.enum([CrabStatus.SOLD, CrabStatus.DEAD]).describe("Status of the crab being checked out"),
   }),
   description: `Checks out a crab`,
   execute: async ({ context }) => {

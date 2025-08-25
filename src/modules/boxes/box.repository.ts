@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "../../db";
-import { boxes, type Box, type NewBox } from "../../db/schema";
+import { boxes, type Box, type NewBox } from "./box.schema";
 import type { CreateBoxInput, UpdateBoxInput } from "./types";
 
 export const BoxRepository = {

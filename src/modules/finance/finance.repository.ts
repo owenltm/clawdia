@@ -1,6 +1,6 @@
 import { and, asc, desc, eq, gte, lte } from "drizzle-orm";
 import { db } from "../../db";
-import { financeJournal, type FinanceJournal, type NewFinanceJournal } from "../../db/schema";
+import { financeJournal, type FinanceJournal, type NewFinanceJournal } from "./finance.schema";
 import type { CreateFinanceInput, UpdateFinanceInput, ListFinanceParams } from "./types";
 
 export const FinanceRepository = {

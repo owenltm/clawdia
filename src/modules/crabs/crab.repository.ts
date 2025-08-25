@@ -1,6 +1,6 @@
 import { and, asc, desc, eq, isNull } from "drizzle-orm";
 import { db } from "../../db";
-import { crabs, type Crab, type NewCrab } from "../../db/schema";
+import { crabs, type Crab, type NewCrab } from "./crab.schema";
 import type { CreateCrabInput, UpdateCrabInput, ListCrabsParams } from "./types";
 export type { CreateCrabInput, UpdateCrabInput, ListCrabsParams } from "./types";
 

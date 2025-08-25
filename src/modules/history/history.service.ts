@@ -1,4 +1,4 @@
-import type { HistoryLog } from "../../db/schema";
+import type { HistoryLog } from "./history.schema";
 import { HistoryRepository } from "./history.repository";
 import type { CreateHistoryInput, UpdateHistoryInput, ListHistoryParams } from "./types";
 

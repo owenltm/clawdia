@@ -1,9 +1,11 @@
-import type { Crab } from "../../db/schema";
+import type { Crab } from "./crab.schema";
 
 import { CrabRepository } from "./crab.repository";
 import { historyService } from "@/src/modules/history/history.service";
+import { HistoryAction, HistoryEntityType } from "@/src/modules/history/types";
 
 import type { CreateCrabInput, UpdateCrabInput, ListCrabsParams } from "./crab.repository";
+import { CrabStatus } from "./types";
 
 export class CrabService {
   async list(params: ListCrabsParams = {}): Promise<Crab[]> {
@@ -22,9 +24,9 @@ export class CrabService {
     const newCrabId = await CrabRepository.create(data);
 
     historyService.create({
-      entityType: "crab",
+      entityType: HistoryEntityType.CRAB,
       entityId: newCrabId,
-      action: "checkin",
+      action: HistoryAction.CHECKIN,
       data: JSON.stringify(data),
     });
 
@@ -34,19 +36,19 @@ export class CrabService {
   async update(id: number, data: UpdateCrabInput): Promise<boolean> {
     const updated = await CrabRepository.update(id, data);
 
-    if (data.status === "sold" || data.status === "dead") {
+    if (data.status === CrabStatus.SOLD || data.status === CrabStatus.DEAD) {
       historyService.create({
-        entityType: "crab",
+        entityType: HistoryEntityType.CRAB,
         entityId: id,
-        action: "checkout",
+        action: HistoryAction.CHECKOUT,
         data: JSON.stringify(data),
       });
     } else {
       // TODO: Check if boxid changed, then action should be transfer
       historyService.create({
-        entityType: "crab",
+        entityType: HistoryEntityType.CRAB,
         entityId: id,
-        action: "update",
+        action: HistoryAction.TRANSFER,
         data: JSON.stringify(data),
       });
     }
@@ -58,9 +60,9 @@ export class CrabService {
     const removed = await CrabRepository.remove(id);
 
     historyService.create({
-      entityType: "crab",
+      entityType: HistoryEntityType.CRAB,
       entityId: id,
-      action: "delete",
+      action: HistoryAction.DELETE,
       data: JSON.stringify({ id }),
     });
 

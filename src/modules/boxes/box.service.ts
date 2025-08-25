@@ -1,7 +1,8 @@
-import type { Box } from "../../db/schema";
+import type { Box } from "./box.schema";
 
 import { BoxRepository } from "./box.repository";
 import { historyService } from "@/src/modules/history/history.service";
+import { HistoryAction, HistoryEntityType } from "@/src/modules/history/types";
 
 import type { CreateBoxInput, UpdateBoxInput } from "./types";
 
@@ -22,9 +23,9 @@ export class BoxService {
     const newBoxId = await BoxRepository.create(data);
 
     historyService.create({
-      entityType: "box",
+      entityType: HistoryEntityType.BOX,
       entityId: newBoxId,
-      action: "create",
+      action: HistoryAction.CREATE,
       data: JSON.stringify(data),
     });
 
@@ -35,9 +36,9 @@ export class BoxService {
     const updated = await BoxRepository.update(id, data);
 
     historyService.create({
-      entityType: "box",
+      entityType: HistoryEntityType.BOX,
       entityId: id,
-      action: "update",
+      action: HistoryAction.UPDATE,
       data: JSON.stringify(data),
     });
 
@@ -48,9 +49,9 @@ export class BoxService {
     const removed = await BoxRepository.remove(id);
 
     historyService.create({
-      entityType: "box",
+      entityType: HistoryEntityType.BOX,
       entityId: id,
-      action: "delete",
+      action: HistoryAction.DELETE,
       data: JSON.stringify({ id }),
     });
 

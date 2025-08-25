@@ -1,19 +1,20 @@
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 import { financeService } from "@/src/modules/finance/finance.service";
+import { FINANCE_REVENUE_CATEGORY_VALUES, FinanceType } from "@/src/modules/finance/types";
 
 export const addRevenue = createTool({
   id: "Add Revenue",
   inputSchema: z.object({
     amount: z.number(),
-    category: z.string(),
+    category: z.enum(FINANCE_REVENUE_CATEGORY_VALUES),
     description: z.string().optional(),
   }),
   description: `Adds revenue to the finance journal`,
   execute: async ({ context: { amount, category, description } }) => {
     // Create a new revenue entry in the finance journal
     const newRevenue = {
-      type: "revenue" as const,
+      type: FinanceType.REVENUE,
       amount: amount.toString(),
       category,
       description,

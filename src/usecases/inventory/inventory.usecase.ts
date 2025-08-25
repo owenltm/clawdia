@@ -1,6 +1,7 @@
 import { boxService } from "@/src/modules/boxes/box.service";
+import { BoxStatus } from "@/src/modules/boxes/types";
 import { crabService } from "@/src/modules/crabs/crab.service";
-import { CreateCrabInput } from "@/src/modules/crabs/types";
+import { CrabStatus, CreateCrabInput } from "@/src/modules/crabs/types";
 import { historyService } from "@/src/modules/history/history.service";
 
 export class InventoryUseCase {
@@ -20,7 +21,7 @@ export class InventoryUseCase {
           boxId: box.id, // Assuming CreateCrabInput has a boxId field
         }),
         await boxService.update(box.id, {
-          status: "filled"
+          status: BoxStatus.FILLED,
         })
       ]);
 
@@ -36,7 +37,7 @@ export class InventoryUseCase {
 
   async updateCrabCheckout(
     boxLabel: string,
-    status: "sold" | "dead"
+    status: CrabStatus.SOLD | CrabStatus.DEAD
   ): Promise<boolean> {
     try {
       const box = await boxService.getByLabel(boxLabel);
@@ -51,7 +52,7 @@ export class InventoryUseCase {
 
       const [updatedCrab, updatedBox] = await Promise.all([
         crabService.update(crab.id, { status, boxId: null }),
-        boxService.update(crab.boxId!, { status: "empty" })
+        boxService.update(crab.boxId!, { status: BoxStatus.EMPTY })
       ]);
 
       return updatedCrab && updatedBox;
