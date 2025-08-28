@@ -1,5 +1,8 @@
 name: Deploy
 
+env:
+  DOCKER_TAR_DIR: "/home/${{ secrets.VPS_USER }}/docker-tars"
+
 on:
   workflow_dispatch:
     inputs:
@@ -44,7 +47,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           source: "clawdia-service.tar"
-          target: "/home/${{ secrets.VPS_USER }}/clawdia-service.tar"
+          target: "${{ env.DOCKER_TAR_DIR }}/clawdia-service.tar
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.0
