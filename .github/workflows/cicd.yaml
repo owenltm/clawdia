@@ -11,19 +11,11 @@ on:
         options:
           - development
           - master
-      environment:
-        description: "Environment to deploy to"
-        required: true
-        default: "staging"
-        type: choice
-        options:
-          - staging
-          - production
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
+    environment: ${{ github.event.inputs.branch == 'development' && 'staging' || 'production' }}
 
     steps:
       - name: Checkout selected branch
@@ -44,7 +36,10 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           source: "clawdia-service.tar"
-          target: "/home/${{ secrets.VPS_USER }}/docker-tars/clawdia-service.tar"
+          target: "/home/${{ secrets.VPS_USER }}/docker-tars/"
+          overwrite: true
+          strip_components: 0
+          tar_tmp_path: ""
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.0
