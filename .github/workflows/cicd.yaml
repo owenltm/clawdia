@@ -44,7 +44,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           source: "clawdia-service.tar"
-          target: "/home/${{ secrets.VPS_USER }}/docker-tars/clawdia-service.tar
+          target: "/home/${{ secrets.VPS_USER }}/docker-tars/clawdia-service.tar"
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.0
@@ -53,8 +53,8 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            docker load -i /home/${{ secrets.VPS_USER }}/clawdia-service.tar
-            if [ "${{ github.ref_name }}" = "dev" ]; then
+            docker load -i /home/${{ secrets.VPS_USER }}/docker-tars/clawdia-service.tar
+            if [ "${{ github.ref_name }}" = "development" ]; then
               echo "Deploying to staging..."
               docker stop clawdia-service-staging || true
               docker rm clawdia-service-staging || true
