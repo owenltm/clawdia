@@ -1,0 +1,67 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to deploy"
+        required: true
+        default: "development"
+        type: choice
+        options:
+          - development
+          - master
+      environment:
+        description: "Environment to deploy to"
+        required: true
+        default: "staging"
+        type: choice
+        options:
+          - staging
+          - production
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+
+    steps:
+      - name: Checkout selected branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Build Docker image
+        run: docker build -t clawdia-service:latest .
+
+      - name: Save Docker image to tar
+        run: docker save clawdia-service:latest -o clawdia-service.tar
+
+      - name: Copy image to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "clawdia-service.tar"
+          target: "/home/${{ secrets.VPS_USER }}/clawdia-service.tar"
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            docker load -i /home/${{ secrets.VPS_USER }}/clawdia-service.tar
+            if [ "${{ github.ref_name }}" = "dev" ]; then
+              echo "Deploying to staging..."
+              docker stop clawdia-service-staging || true
+              docker rm clawdia-service-staging || true
+              docker run -d --restart always --name clawdia-service-staging -p 4110:3000 -e DATABASE_URL= -e GOOGLE_GENERATIVE_AI_API_KEY= clawdia-service:latest
+            elif [ "${{ github.ref_name }}" = "master" ]; then
+              echo "Deploying to production..."
+              docker stop clawdia-service-prod || true
+              docker rm clawdia-service-prod || true
+              docker run -d --restart always --name clawdia-service-prod -p 4100:3000 -e DATABASE_URL= -e GOOGLE_GENERATIVE_AI_API_KEY= clawdia-service:latest
+            fi
