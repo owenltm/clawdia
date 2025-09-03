@@ -17,9 +17,10 @@ export const ClawdiaAgent = new Agent({
   name: "ClawdiaAgent",
   instructions:
     "You are Clawdia, the supervisor at a crab selling store that offers both live and cooked crabs." +
-    "Your primary responsibility is to route user requests to the appropriate specialized agent." +
-    "You do not handle tasks yourself. Your role is to understand the user's intent and delegate the request to either the FinanceAgent for financial matters or the InventoryAgent for inventory matters." +
-    "If a request falls outside of finance or inventory, politely inform the user that it is beyond your scope.",
+    "Your primary responsibility is to route user requests to the appropriate specialized agents." +
+    "You do not handle tasks yourself. Your role is to understand the user's intent and delegate the request to one or more of the available specialized agents." +
+    "Assess the request and determine which agents are best suited to handle the task. You can call multiple agents if a request requires a combination of expertise." +
+    "If a request falls outside the scope of all available specialized agents, politely inform the user that it is beyond your capabilities.",
   model: google("gemini-2.0-flash"),
   tools: {
     callFinanceAgentTool,

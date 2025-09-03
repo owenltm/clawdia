@@ -31,6 +31,7 @@ export const FinanceRepository = {
   },
 
   async create(data: CreateFinanceInput): Promise<number> {
+    // TODO: Check mapping for category with type
     const res = await db.insert(financeJournal).values(data as NewFinanceJournal);
     const resultObj: any = Array.isArray(res) ? res[0] : res;
     const insertId = resultObj?.insertId as number | undefined;
@@ -39,6 +40,7 @@ export const FinanceRepository = {
   },
 
   async update(id: number, data: UpdateFinanceInput): Promise<boolean> {
+    // TODO: Check mapping for category with type
     const res = await db
       .update(financeJournal)
       .set(data as Partial<NewFinanceJournal>)
