@@ -1,6 +1,6 @@
 import { mysqlTable, int, varchar, mysqlEnum, timestamp, decimal, index } from "drizzle-orm/mysql-core";
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
-import { FINANCE_CATEGORY_VALUES, FINANCE_TYPE_VALUES } from "./types";
+import { FINANCE_CATEGORY_VALUES, FINANCE_TYPE_VALUES } from "../types";
 
 export const financeJournal = mysqlTable(
   "finance_journal",

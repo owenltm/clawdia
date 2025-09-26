@@ -11,7 +11,7 @@ financeRouter.get("/", async (req: Request, res: Response, next: NextFunction) =
 
     const params = {
       type: type as any,
-      category,
+      category: category as any,
       referenceId: referenceId !== undefined ? Number(referenceId) : undefined,
       minAmount: minAmount !== undefined ? Number(minAmount) : undefined,
       maxAmount: maxAmount !== undefined ? Number(maxAmount) : undefined,

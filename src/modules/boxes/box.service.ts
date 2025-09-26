@@ -1,8 +1,6 @@
-import type { Box } from "./box.schema";
+import type { Box } from "./types";
 
 import { BoxRepository } from "./box.repository";
-import { historyService } from "@/src/modules/history/history.service";
-import { HistoryAction, HistoryEntityType } from "@/src/modules/history/types";
 
 import type { CreateBoxInput, UpdateBoxInput } from "./types";
 
@@ -20,42 +18,15 @@ export class BoxService {
   }
 
   async create(data: CreateBoxInput): Promise<number> {
-    const newBoxId = await BoxRepository.create(data);
-
-    historyService.create({
-      entityType: HistoryEntityType.BOX,
-      entityId: newBoxId,
-      action: HistoryAction.CREATE,
-      data: JSON.stringify(data),
-    });
-
-    return newBoxId;
+    return BoxRepository.create(data);
   }
 
   async update(id: number, data: UpdateBoxInput): Promise<boolean> {
-    const updated = await BoxRepository.update(id, data);
-
-    historyService.create({
-      entityType: HistoryEntityType.BOX,
-      entityId: id,
-      action: HistoryAction.UPDATE,
-      data: JSON.stringify(data),
-    });
-
-    return updated;
+    return BoxRepository.update(id, data);
   }
 
   async remove(id: number): Promise<boolean> {
-    const removed = await BoxRepository.remove(id);
-
-    historyService.create({
-      entityType: HistoryEntityType.BOX,
-      entityId: id,
-      action: HistoryAction.DELETE,
-      data: JSON.stringify({ id }),
-    });
-
-    return removed;
+    return BoxRepository.remove(id);
   }
 }
 
