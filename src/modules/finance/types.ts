@@ -1,5 +1,5 @@
-import { FinanceJournal as FinanceJournalSchema } from "./schema/finance.schema";
-import { FinanceJournal } from "./models/finance.model";
+import { FinanceJournal as FinanceJournalSchema } from "./schemas/finance.schema";
+import { FinanceJournal } from "./entities/finance.entity";
 
 export type CreateFinanceInput = Omit<FinanceJournalSchema, "id" | "createdAt">;
 export type UpdateFinanceInput = Partial<CreateFinanceInput>;

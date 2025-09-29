@@ -2,7 +2,7 @@ import { z } from "zod";
 import { createTool } from "@mastra/core/tools";
 
 import { inventoryUseCase } from "@/src/usecases/inventory/inventory.usecase";
-import { CrabStatus } from "@/src/modules/crabs/types";
+import { CrabStatus } from "@/src/modules/inventory/types";
 
 export const crabCheckIn = createTool({
   id: "Crab Check In",

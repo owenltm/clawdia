@@ -1,7 +1,7 @@
 import { mysqlTable, int, varchar, mysqlEnum, timestamp, decimal, date, index } from "drizzle-orm/mysql-core";
 import { relations, InferInsertModel, InferSelectModel, sql } from "drizzle-orm";
-import { boxes } from "@/src/modules/boxes/box.schema";
-import { CRAB_STATUS_VALUES } from "./types";
+import { boxes } from "./box.schema";
+import { CRAB_STATUS_VALUES } from "../types";
 
 export const crabs = mysqlTable(
   "crabs",
@@ -33,3 +33,6 @@ export const crabsRelations = relations(crabs, ({ one }) => ({
 
 export type Crab = InferSelectModel<typeof crabs>;
 export type NewCrab = InferInsertModel<typeof crabs>;
+
+export type CreateCrabInput = Omit<NewCrab, "id" | "createdAt" | "updatedAt">;
+export type UpdateCrabInput = Partial<CreateCrabInput>;

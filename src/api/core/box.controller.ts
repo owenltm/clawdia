@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from "express";
-import { boxService } from "../../modules/boxes/box.service";
+import { boxService } from "../../modules//inventory/services/box.service";
 import { inventoryUseCase } from "../../usecases/inventory/inventory.usecase";
 
 // Router for Boxes. Mount as: app.use("/boxes", boxRouter)
@@ -8,6 +8,7 @@ export const boxRouter = Router();
 // List all boxes
 boxRouter.get("/", async (_req: Request, res: Response, next: NextFunction) => {
   try {
+    // TODO: call USECASE instead of service directly
     const data = await boxService.list();
     res.status(200).json(data);
   } catch (err) {
@@ -18,6 +19,7 @@ boxRouter.get("/", async (_req: Request, res: Response, next: NextFunction) => {
 // Get a single box by ID
 boxRouter.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
+    // TODO: call USECASE instead of service directly
     const id = Number(req.params.id);
     const item = await boxService.get(id);
     if (!item) return res.status(404).json({ message: "Not Found" });

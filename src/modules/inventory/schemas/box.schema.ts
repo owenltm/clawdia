@@ -1,6 +1,6 @@
 import { mysqlTable, int, varchar, mysqlEnum, timestamp, index } from "drizzle-orm/mysql-core";
 import { relations, InferInsertModel, InferSelectModel } from "drizzle-orm";
-import { BOX_STATUS_VALUES } from "./types";
+import { BOX_STATUS_VALUES } from "../types";
 
 // Boxes table
 export const boxes = mysqlTable(
@@ -21,3 +21,6 @@ export const boxes = mysqlTable(
 // Types
 export type Box = InferSelectModel<typeof boxes>;
 export type NewBox = InferInsertModel<typeof boxes>;
+
+export type CreateBoxInput = Omit<NewBox, "id" | "createdAt" | "updatedAt">;
+export type UpdateBoxInput = Partial<CreateBoxInput>;

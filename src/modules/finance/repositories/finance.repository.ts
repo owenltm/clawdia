@@ -1,8 +1,8 @@
 import { and, asc, desc, eq, gte, lte } from "drizzle-orm";
 import { db } from "../../../db";
-import { financeJournal } from "../schema/finance.schema";
+import { financeJournal } from "../schemas/finance.schema";
 import { FinanceType, FinanceCategory, CreateFinanceInput, ListFinanceParams, UpdateFinanceInput, CreateFinanceParam } from "../types";
-import { FinanceJournal, mapToFinanceJournal, mapToFinanceJournals } from "../models/finance.model";
+import { FinanceJournal, mapToFinanceJournal, mapToFinanceJournals } from "../entities/finance.entity";
 
 export const FinanceRepository = {
   async list(params: ListFinanceParams = {}): Promise<FinanceJournal[]> {

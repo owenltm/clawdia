@@ -1,4 +1,4 @@
-import type { FinanceJournal as FinanceJournalSchema } from "../schema/finance.schema";
+import type { FinanceJournal as FinanceJournalSchema } from "../schemas/finance.schema";
 
 export class FinanceJournal {
   constructor(

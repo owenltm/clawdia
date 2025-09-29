@@ -1,14 +1,14 @@
-import { boxService } from "@/src/modules/boxes/box.service";
-import { BoxStatus, CreateBoxInput, UpdateBoxInput } from "@/src/modules/boxes/types";
-import { crabService } from "@/src/modules/crabs/crab.service";
-import { CrabStatus, CreateCrabInput } from "@/src/modules/crabs/types";
+import { boxService } from "@/src/modules/inventory/services/box.service";
+import { CreateBoxParam, CreateCrabInput, UpdateBoxParam } from "@/src/modules/inventory/types";
+import { crabService } from "@/src/modules/inventory/services/crab.service";
+import { CrabStatus } from "@/src/modules/inventory/types";
 import { historyService } from "@/src/modules/history/history.service";
 import { HistoryAction, HistoryEntityType } from "@/src/modules/history/types";
 import { Inventory } from "./types";
 
 export class InventoryUseCase {
   async getCurrentInventory(): Promise<Inventory[]> {
-    // Get all boxes
+    /* // Get all boxes
     const boxes = await boxService.list();
     // Get all crabs with status IN
     const crabs = await crabService.list({ status: CrabStatus.IN });
@@ -28,14 +28,15 @@ export class InventoryUseCase {
       label: box.label,
       status: box.status,
       content: crabsByBoxId[box.id] || []
-    }));
+    })); */
+    return [];
   }
 
   async newCrabCheckin(
     data: CreateCrabInput,
     boxLabel: string
   ): Promise<number> {
-    try {
+    /* try {
       const box = await boxService.getByLabel(boxLabel);
       if (!box) {
         throw new Error(`Box with label ${boxLabel} not found`);
@@ -58,14 +59,15 @@ export class InventoryUseCase {
         errorMessage = error.message;
       }
       throw new Error(`Error check in crab: ${errorMessage}`);
-    }
+    } */
+   return 0;
   }
 
   async updateCrabCheckout(
     boxLabel: string,
     status: CrabStatus.SOLD | CrabStatus.DEAD
   ): Promise<boolean> {
-    try {
+    /* try {
       const box = await boxService.getByLabel(boxLabel);
       if (!box) {
         throw new Error(`Box with label ${boxLabel} not found`);
@@ -88,7 +90,8 @@ export class InventoryUseCase {
         errorMessage = error.message;
       }
       throw new Error(`Error updating crab checkout: ${errorMessage}`);
-    }
+    } */
+   return false;
   }
 
   async getCurrentBoxesStatus(): Promise<any[]> {
@@ -105,7 +108,7 @@ export class InventoryUseCase {
   }
 
   // Box management methods with business logic
-  async createBox(data: CreateBoxInput): Promise<number> {
+  async createBox(data: CreateBoxParam): Promise<number> {
     const newBoxId = await boxService.create(data);
 
     await historyService.create({
@@ -118,7 +121,7 @@ export class InventoryUseCase {
     return newBoxId;
   }
 
-  async updateBox(id: number, data: UpdateBoxInput): Promise<boolean> {
+  async updateBox(id: number, data: UpdateBoxParam): Promise<boolean> {
     const updated = await boxService.update(id, data);
 
     await historyService.create({

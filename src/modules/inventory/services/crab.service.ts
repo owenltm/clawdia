@@ -1,15 +1,14 @@
-import type { Crab } from "./crab.schema";
+import type { Crab } from "../schemas/crab.schema";
 
-import { CrabRepository } from "./crab.repository";
+import { CrabRepository } from "../repositories/crab.repository";
 import { historyService } from "@/src/modules/history/history.service";
 import { HistoryAction, HistoryEntityType } from "@/src/modules/history/types";
 
-import type { CreateCrabInput, UpdateCrabInput, ListCrabsParams } from "./crab.repository";
-import { CrabStatus } from "./types";
+import { CrabStatus, CreateCrabInput, UpdateCrabInput } from "../types";
 
 export class CrabService {
-  async list(params: ListCrabsParams = {}): Promise<Crab[]> {
-    return CrabRepository.list(params);
+  async list(): Promise<Crab[]> {
+    return CrabRepository.list({});
   }
 
   async get(id: number): Promise<Crab | undefined> {
@@ -23,12 +22,12 @@ export class CrabService {
   async create(data: CreateCrabInput): Promise<number> {
     const newCrabId = await CrabRepository.create(data);
 
-    historyService.create({
+    /* historyService.create({
       entityType: HistoryEntityType.CRAB,
       entityId: newCrabId,
       action: HistoryAction.CHECKIN,
       data: JSON.stringify(data),
-    });
+    }); */
 
     return newCrabId;
   }
@@ -36,7 +35,7 @@ export class CrabService {
   async update(id: number, data: UpdateCrabInput): Promise<boolean> {
     const updated = await CrabRepository.update(id, data);
 
-    if (data.status === CrabStatus.SOLD || data.status === CrabStatus.DEAD) {
+    /* if (data.status === CrabStatus.SOLD || data.status === CrabStatus.DEAD) {
       historyService.create({
         entityType: HistoryEntityType.CRAB,
         entityId: id,
@@ -51,7 +50,7 @@ export class CrabService {
         action: HistoryAction.TRANSFER,
         data: JSON.stringify(data),
       });
-    }
+    } */
 
     return updated;
   }
@@ -59,12 +58,12 @@ export class CrabService {
   async remove(id: number): Promise<boolean> {
     const removed = await CrabRepository.remove(id);
 
-    historyService.create({
+    /* historyService.create({
       entityType: HistoryEntityType.CRAB,
       entityId: id,
       action: HistoryAction.DELETE,
       data: JSON.stringify({ id }),
-    });
+    }); */
 
     return removed;
   }

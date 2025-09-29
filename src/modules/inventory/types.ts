@@ -1,0 +1,38 @@
+import { number } from "zod";
+import type { NewCrab } from "./schemas/crab.schema";
+
+export type CreateCrabInput = Omit<NewCrab, "id" | "createdAt" | "updatedAt">;
+export type UpdateCrabInput = Partial<CreateCrabInput>;
+
+export enum BoxStatus {
+  FILLED = "filled",
+  EMPTY = "empty",
+}
+
+export const BOX_STATUS_VALUES = Object.values(BoxStatus) as [BoxStatus, ...BoxStatus[]];
+
+export enum CrabStatus {
+  IN = "in",
+  SOLD = "sold",
+  DEAD = "dead",
+}
+export const CRAB_STATUS_VALUES = Object.values(CrabStatus) as [CrabStatus, ...CrabStatus[]];
+
+export type CreateBoxParam = {
+    "label": string,
+    "status": string,
+    "maxFill": number
+}
+
+export type UpdateBoxParam = Partial<CreateBoxParam>;
+
+export type CreateCrabParam = {}
+
+export type UpdateCrabParam = Partial<CreateCrabParam>;
+
+export type ListCrabsParams = {
+  status?: CrabStatus;
+  boxId?: number | null;
+  orderBy?: "createdAt" | "updatedAt" | "weight";
+  direction?: "asc" | "desc";
+};

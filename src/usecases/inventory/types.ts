@@ -1,5 +1,5 @@
-import { BoxStatus } from "@/src/modules/boxes/types";
-import { Crab } from "@/src/modules/crabs/types";
+import { BoxStatus } from "@modules/inventory/types";
+import { Crab } from "@modules/inventory/entities";
 
 export type Inventory = {
   id: number,

@@ -1,6 +1,6 @@
 import { crabService } from "@/src/modules/crabs/crab.service";
 import { boxService } from "@/src/modules/boxes/box.service";
-import { financeService } from "@/src/modules/finance/finance.service";
+import { financeService } from "@/src/modules/finance/services/finance.service";
 
 export class OverviewUseCase {
   async getInventoryOverviewData(): Promise<any> {

@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from "express";
-import { crabService } from "../../modules/crabs/crab.service";
+import { crabService } from "../../modules/inventory/services/crab.service";
 
 // Router for Crabs. Mount as: app.use("/crabs", crabRouter)
 export const crabRouter = Router();

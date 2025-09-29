@@ -1,8 +1,6 @@
-import type { Box } from "./types";
-
-import { BoxRepository } from "./box.repository";
-
-import type { CreateBoxInput, UpdateBoxInput } from "./types";
+import type { Box } from "../entities";
+import { BoxRepository } from "../repositories/box.repository";
+import { CreateBoxParam, UpdateBoxParam } from "../types";
 
 export class BoxService {
   async list(): Promise<Box[]> {
@@ -17,11 +15,11 @@ export class BoxService {
     return BoxRepository.getByLabel(label);
   }
 
-  async create(data: CreateBoxInput): Promise<number> {
+  async create(data: CreateBoxParam): Promise<number> {
     return BoxRepository.create(data);
   }
 
-  async update(id: number, data: UpdateBoxInput): Promise<boolean> {
+  async update(id: number, data: Partial<UpdateBoxParam>): Promise<boolean> {
     return BoxRepository.update(id, data);
   }
 

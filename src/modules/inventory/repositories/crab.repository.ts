@@ -1,8 +1,7 @@
 import { and, asc, desc, eq, isNull } from "drizzle-orm";
-import { db } from "../../db";
-import { crabs, type Crab, type NewCrab } from "./crab.schema";
-import type { CreateCrabInput, UpdateCrabInput, ListCrabsParams } from "./types";
-export type { CreateCrabInput, UpdateCrabInput, ListCrabsParams } from "./types";
+import { db } from "../../../db";
+import { crabs, type Crab, type NewCrab } from "../schemas/crab.schema";
+import type { CreateCrabInput, UpdateCrabInput, ListCrabsParams } from "../types";
 
 export const CrabRepository = {
   async list(params: ListCrabsParams = {}): Promise<Crab[]> {

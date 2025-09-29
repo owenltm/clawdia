@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from "express";
-import { financeService } from "../../modules/finance/finance.service";
+import { financeService } from "../../modules/finance/services/finance.service";
 
 // Router for Finance. Mount as: app.use("/finance", financeRouter)
 export const financeRouter = Router();

@@ -11,8 +11,10 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use("/core", ApiKeyMiddleware);
-app.use("/agent", ApiKeyMiddleware);
+if(process.env.API_KEY){
+  app.use("/core", ApiKeyMiddleware);
+  app.use("/agent", ApiKeyMiddleware);
+}
 
 // Root route
 app.get("/", (req: Request, res: Response) => {

@@ -1,6 +1,6 @@
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
-import { financeService } from "@/src/modules/finance/finance.service";
+import { financeService } from "@/src/modules/finance/services/finance.service";
 import { FINANCE_CATEGORY_VALUES, FinanceType } from "@/src/modules/finance/types";
 
 export const addExpenses = createTool({
@@ -20,7 +20,7 @@ export const addExpenses = createTool({
       description,
     };
 
-    const expenseId = await financeService.create(newExpense);
+    const expenseId = await financeUseCase.create(newExpense);
 
     return { id: expenseId };
   },
