@@ -11,6 +11,7 @@ export const financeJournal = mysqlTable(
     category: mysqlEnum("category", FINANCE_CATEGORY_VALUES).notNull(),
     referenceId: int("reference_id"),
     description: varchar("description", { length: 255 }),
+    date: timestamp("date", { mode: "date" }).notNull(),
     createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   },
   (table) => ({

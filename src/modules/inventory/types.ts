@@ -33,6 +33,10 @@ export type UpdateCrabParam = Partial<CreateCrabParam>;
 export type ListCrabsParams = {
   status?: CrabStatus;
   boxId?: number | null;
+  checkedInAfter?: Date;
+  checkedInBefore?: Date;
+  checkedOutAfter?: Date;
+  checkedOutBefore?: Date;
   orderBy?: "createdAt" | "updatedAt" | "weight";
   direction?: "asc" | "desc";
 };

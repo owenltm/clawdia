@@ -4,7 +4,6 @@ import { boxRouter } from "./api/core/box.controller";
 import { crabRouter } from "./api/core/crab.controller";
 import { financeRouter } from "./api/core/finance.controller";
 import { agentRouter } from "./api/agent/agent.controller";
-import { overviewRouter } from "./api/core/overview.controller";
 import { inventoryRouter } from "./api/core/inventory.controller";
 
 const app = express();
@@ -32,7 +31,6 @@ app.use("/agent", agentRouter);
 app.use("/core/boxes", boxRouter);
 app.use("/core/crabs", crabRouter);
 app.use("/core/finance", financeRouter);
-app.use("/core/overview", overviewRouter);
 app.use("/core/inventory", inventoryRouter);
 
 // 404 handler

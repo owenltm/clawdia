@@ -3,6 +3,7 @@ import { db } from "../../../db";
 import { financeJournal } from "../schemas/finance.schema";
 import { FinanceType, FinanceCategory, CreateFinanceInput, ListFinanceParams, UpdateFinanceInput, CreateFinanceParam } from "../types";
 import { FinanceJournal, mapToFinanceJournal, mapToFinanceJournals } from "../entities/finance.entity";
+import { C } from "drizzle-kit/index-BAUrj6Ib";
 
 export const FinanceRepository = {
   async list(params: ListFinanceParams = {}): Promise<FinanceJournal[]> {
@@ -66,18 +67,18 @@ export const FinanceRepository = {
     throw new Error("Insert succeeded but insertId was not returned by the driver");
   },
 
-  async update(id: number, data: Partial<FinanceJournal>): Promise<boolean> {
-    const updateData: UpdateFinanceInput = {};
-    if (data.type !== undefined) updateData.type = data.type as FinanceType;
-    if (data.amount !== undefined) updateData.amount = String(data.amount);
-    if (data.category !== undefined) updateData.category = data.category as FinanceCategory;
-    if (data.referenceId !== undefined) updateData.referenceId = data.referenceId;
-    if (data.description !== undefined) updateData.description = data.description;
+  async update(id: number, data: Partial<CreateFinanceParam>): Promise<boolean> {
+    // const updateData: UpdateFinanceInput = {};
+    // if (data.type !== undefined) updateData.type = data.type as FinanceType;
+    // if (data.amount !== undefined) updateData.amount = String(data.amount);
+    // if (data.category !== undefined) updateData.category = data.category as FinanceCategory;
+    // if (data.referenceId !== undefined) updateData.referenceId = data.referenceId;
+    // if (data.description !== undefined) updateData.description = data.description;
 
     // TODO: Check mapping for category with type
     const res = await db
       .update(financeJournal)
-      .set(updateData)
+      .set(data as Partial<CreateFinanceInput>)
       .where(eq(financeJournal.id, id));
     const resultObj: any = Array.isArray(res) ? res[0] : res;
     const affectedRows = resultObj?.affectedRows ?? resultObj?.rowsAffected;

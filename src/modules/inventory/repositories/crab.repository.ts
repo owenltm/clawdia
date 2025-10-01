@@ -1,15 +1,19 @@
-import { and, asc, desc, eq, isNull } from "drizzle-orm";
+import { and, asc, desc, eq, isNull, gte, lte } from "drizzle-orm";
 import { db } from "../../../db";
 import { crabs, type Crab, type NewCrab } from "../schemas/crab.schema";
 import type { CreateCrabInput, UpdateCrabInput, ListCrabsParams } from "../types";
 
 export const CrabRepository = {
   async list(params: ListCrabsParams = {}): Promise<Crab[]> {
-    const { status, boxId, orderBy = "createdAt", direction = "desc" } = params;
+    const { status, boxId, checkedInAfter, checkedInBefore, checkedOutAfter, checkedOutBefore, orderBy = "createdAt", direction = "desc" } = params;
 
     const where = [];
     if (status) where.push(eq(crabs.status, status));
     if (boxId === null) where.push(isNull(crabs.boxId));
+    if (checkedInAfter) where.push(gte(crabs.checkInDate, checkedInAfter));
+    if (checkedInBefore) where.push(lte(crabs.checkInDate, checkedInBefore));
+    if (checkedOutAfter) where.push(gte(crabs.checkOutDate, checkedOutAfter));
+    if (checkedOutBefore) where.push(lte(crabs.checkOutDate, checkedOutBefore));
     else if (typeof boxId === "number") where.push(eq(crabs.boxId, boxId));
 
     const orderCol =

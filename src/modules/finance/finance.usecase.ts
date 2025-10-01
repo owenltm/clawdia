@@ -1,8 +1,38 @@
-import type { FinanceJournal } from "../entities/finance.entity";
-import { FinanceRepository } from "../repositories/finance.repository";
-import type { ListFinanceParams, DailyFinanceSummary, CreateFinanceParam } from "../types";
+import type { FinanceJournal } from "./entities/finance.entity";
+import { FinanceRepository } from "./repositories/finance.repository";
+import type { ListFinanceParams, DailyFinanceSummary, CreateFinanceParam } from "./types";
 
-export class FinanceService {
+export class FinanceUseCase {
+  async getFinanceOverview(startDate: string, endDate: string) {  
+    const list = await this.getDailyList(startDate, endDate);
+
+    let totalRevenue = 0;
+    let totalExpenses = 0;
+
+    let totalRevenueByCategory: Record<string, number> = {};
+    let totalExpensesByCategory: Record<string, number> = {};
+
+    for (const day of list) {
+      for (const revenue of day.revenues) {
+        totalRevenue += revenue.amount;
+        totalRevenueByCategory[revenue.category] = (totalRevenueByCategory[revenue.category] || 0) + revenue.amount;
+      }
+
+      for (const expense of day.expenses) {
+        totalExpenses += expense.amount;
+        totalExpensesByCategory[expense.category] = (totalExpensesByCategory[expense.category] || 0) + expense.amount;
+      }
+    }
+
+    return {
+      totalRevenue,
+      totalExpenses,
+      totalRevenueByCategory,
+      totalExpensesByCategory,
+      dailySummary: list,
+    }
+  }
+
   async list(params: ListFinanceParams = {}): Promise<FinanceJournal[]> {
     return FinanceRepository.list(params);
   }
@@ -46,7 +76,7 @@ export class FinanceService {
     return FinanceRepository.create(data);
   }
 
-  async update(id: number, data: Partial<FinanceJournal>): Promise<boolean> {
+  async update(id: number, data: Partial<CreateFinanceParam>): Promise<boolean> {
     return FinanceRepository.update(id, data);
   }
 
@@ -55,5 +85,5 @@ export class FinanceService {
   }
 }
 
-export const financeService = new FinanceService();
+export const financeUseCase = new FinanceUseCase();
 

@@ -1,6 +1,6 @@
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
-import { financeService } from "@/src/modules/finance/services/finance.service";
+import { financeUseCase } from "@/src/modules/finance/finance.usecase";
 import { FINANCE_CATEGORY_VALUES, FinanceType } from "@/src/modules/finance/types";
 
 export const addRevenue = createTool({

@@ -43,6 +43,13 @@
       "when": 1756110615522,
       "tag": "0005_special_moon_knight",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1759290556486,
+      "tag": "0006_concerned_black_bolt",
+      "breakpoints": true
     }
   ]
 }
