@@ -69,22 +69,25 @@ export class InventoryUseCase {
     });
   }
 
-  async newCrabCheckin(
-    data: CreateCrabInput,
-    boxLabel: string
-  ): Promise<number> {
+  async newCrabCheckin({
+    boxId,
+    data,
+  }: {
+    boxId: number;
+    data: Omit<CreateCrabInput, 'boxId'>;
+  }): Promise<number> {
     try {
-      const box = await boxService.getByLabel(boxLabel);
-      if (!box) {
-        throw new Error(`Box with label ${boxLabel} not found`);
-      }
+      // const box = await boxService.getByLabel(boxLabel);
+      // if (!box) {
+      //   throw new Error(`Box with label ${boxLabel} not found`);
+      // }
 
       const [newCrabId, updatedBox] = await Promise.all([
         await crabService.create({
           ...data,
-          boxId: box.id, // Assuming CreateCrabInput has a boxId field
+          boxId, // Assuming CreateCrabInput has a boxId field
         }),
-        await boxService.update(box.id, {
+        await boxService.update(boxId, {
           status: BoxStatus.FILLED,
         })
       ]);
@@ -99,19 +102,21 @@ export class InventoryUseCase {
     }
   }
 
-  async updateCrabCheckout(
-    boxLabel: string,
+  async updateCrabCheckout({
+    boxId, status
+  }:{
+    boxId: number,
     status: CrabStatus.SOLD | CrabStatus.DEAD
-  ): Promise<boolean> {
+  }): Promise<boolean> {
     try {
-      const box = await boxService.getByLabel(boxLabel);
-      if (!box) {
-        throw new Error(`Box with label ${boxLabel} not found`);
-      }
+      // const box = await boxService.getByLabel(boxLabel);
+      // if (!box) {
+      //   throw new Error(`Box with label ${boxLabel} not found`);
+      // }
 
-      const crab = await crabService.getByBoxId(box.id);
+      const crab = await crabService.getByBoxId(boxId);
       if (!crab) {
-        throw new Error(`No crab found in box with label ${boxLabel}`);
+        throw new Error(`No crab found in box with id ${boxId}`);
       }
 
       const [updatedCrab, updatedBox] = await Promise.all([

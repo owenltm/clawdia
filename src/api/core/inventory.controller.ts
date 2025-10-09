@@ -22,3 +22,31 @@ inventoryRouter.get("/current", async (req: Request, res: Response, next: NextFu
     next(err);
   }
 });
+
+// Add new crab to box
+inventoryRouter.post("/:boxId/checkIn", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const boxId = parseInt(req.params.boxId);
+    const crabData = req.body;
+    const data = await inventoryUseCase.newCrabCheckin({boxId, data: crabData});
+    res.status(201).json(data);
+  } catch (err) {
+    next(err);
+  }
+});
+
+inventoryRouter.post("/:boxId/checkOut", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const boxId = parseInt(req.params.boxId);
+    const { status } = req.body;
+
+    if (status !== "SOLD" && status !== "DEAD") {
+      return res.status(400).json({ message: "Invalid status." });
+    }
+
+    const data = await inventoryUseCase.updateCrabCheckout({ boxId, status });
+    res.status(200).json(data);
+  } catch (err) {
+    next(err);
+  }
+});

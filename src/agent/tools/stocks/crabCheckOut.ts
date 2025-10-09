@@ -12,20 +12,21 @@ export const crabCheckOut = createTool({
   }),
   description: `Checks out a crab`,
   execute: async ({ context }) => {
-    try {
-      const updatecCrab = await inventoryUseCase.updateCrabCheckout(
-        context.boxLabel,
-        context.status,
-      );
+    return "Crab check-out functionality is currently disabled.";
+    // try {
+    //   const updatecCrab = await inventoryUseCase.updateCrabCheckout(
+    //     context.boxLabel,
+    //     context.status,
+    //   );
 
-      if (!updatecCrab) {
-        return "Error during crab check-in, please try again later.";
-      }
+    //   if (!updatecCrab) {
+    //     return "Error during crab check-in, please try again later.";
+    //   }
 
-      return `Crab successfully checked out from box labeled: ${context.boxLabel}`;
-    } catch (error) {
-      console.error("Error during crab check-in:", error);
-      return "Error during crab check-in, please try again later.";
-    }
+    //   return `Crab successfully checked out from box labeled: ${context.boxLabel}`;
+    // } catch (error) {
+    //   console.error("Error during crab check-in:", error);
+    //   return "Error during crab check-in, please try again later.";
+    // }
   },
 });

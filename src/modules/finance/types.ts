@@ -41,6 +41,7 @@ export type CreateFinanceParam = {
    type: "revenue" | "expense",
    amount: number,
    category: string,
+   date: string,
    referenceId?: number,
    description?: string,
 }

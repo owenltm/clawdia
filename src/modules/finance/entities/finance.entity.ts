@@ -6,6 +6,7 @@ export class FinanceJournal {
     public readonly type: "revenue" | "expense",
     public readonly amount: number,
     public readonly category: string,
+    public readonly date: Date,
     public readonly referenceId: number | null,
     public readonly description: string | null,
     public readonly createdAt: Date
@@ -38,6 +39,7 @@ export function mapToFinanceJournal(dbRow: FinanceJournalSchema): FinanceJournal
     dbRow.type,
     typeof dbRow.amount === "string" ? Number(dbRow.amount) : dbRow.amount,
     dbRow.category,
+    dbRow.date,
     dbRow.referenceId,
     dbRow.description,
     dbRow.createdAt
