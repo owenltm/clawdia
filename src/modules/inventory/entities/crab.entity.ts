@@ -8,6 +8,7 @@ export class Crab {
   status: CrabStatus;
   checkInDate: Date;
   checkOutDate?: Date | null;
+  notes?: string;
   boxId?: number | null;
   createdAt: Date;
   updatedAt: Date;
@@ -21,7 +22,8 @@ export class Crab {
     createdAt: Date,
     updatedAt: Date,
     checkOutDate?: Date | null,
-    boxId?: number | null
+    boxId?: number | null,
+    notes?: string
   ) {
     this.id = id;
     this.weight = weight;
@@ -115,6 +117,7 @@ export class Crab {
       checkInDate: this.checkInDate,
       checkOutDate: this.checkOutDate,
       boxId: this.boxId,
+      notes: this.notes,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
@@ -146,6 +149,7 @@ export class Crab {
       status: this.status,
       checkInDate: this.checkInDate, // Keep as Date - Drizzle handles conversion
       checkOutDate: this.checkOutDate ?? null, // Convert undefined to null
+      notes: this.notes ?? '', // Convert undefined to empty string
       boxId: this.boxId ?? null, // Convert undefined to null
       updatedAt: this.updatedAt,
     };

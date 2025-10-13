@@ -5,5 +5,6 @@ export type Inventory = {
   id: number,
   label: string,
   status: BoxStatus,
+  maxFill: number,
   content: Crab[]
 }

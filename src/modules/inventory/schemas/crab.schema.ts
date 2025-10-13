@@ -13,6 +13,7 @@ export const crabs = mysqlTable(
     checkInDate: date("check_in_date").notNull().default(sql`(CURRENT_DATE)`),
     checkOutDate: date("check_out_date"),
     boxId: int("box_id").references(() => boxes.id),
+    notes: varchar("notes", { length: 255 }),
     createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow().onUpdateNow(),
   },

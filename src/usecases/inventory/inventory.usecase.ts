@@ -61,9 +61,7 @@ export class InventoryUseCase {
       const boxCrabs = crabsByBoxId[box.id] || [];
 
       return {
-        id: box.id,
-        label: box.label,
-        status: boxCrabs.length > 0 ? BoxStatus.FILLED : BoxStatus.EMPTY,
+        ...box,
         content: boxCrabs
       };
     });
@@ -120,7 +118,7 @@ export class InventoryUseCase {
       }
 
       const [updatedCrab, updatedBox] = await Promise.all([
-        crabService.update(crab.id, { status, boxId: null }),
+        crabService.update(crab.id, { status, checkOutDate: new Date(), boxId: null }),
         boxService.update(crab.boxId!, { status: BoxStatus.EMPTY })
       ]);
 

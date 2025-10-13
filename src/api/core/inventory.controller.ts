@@ -1,3 +1,4 @@
+import { CrabStatus } from "@/src/modules/inventory/types";
 import { inventoryUseCase } from "@/src/usecases/inventory/inventory.usecase";
 import { Router, Request, Response, NextFunction } from "express";
 
@@ -40,7 +41,7 @@ inventoryRouter.post("/:boxId/checkOut", async (req: Request, res: Response, nex
     const boxId = parseInt(req.params.boxId);
     const { status } = req.body;
 
-    if (status !== "SOLD" && status !== "DEAD") {
+    if (status !== CrabStatus.SOLD && status !== CrabStatus.DEAD) {
       return res.status(400).json({ message: "Invalid status." });
     }
 
