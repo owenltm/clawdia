@@ -9,9 +9,9 @@ export const boxRouter = Router();
 // List all boxes
 boxRouter.get("/", async (_req: Request, res: Response, next: NextFunction) => {
   try {
-    // TODO: call USECASE instead of service directly
     const params = _req.query as ListBoxesParams;
-    const data = await boxService.list(params);
+    const data = await inventoryUseCase.findBoxes(params);
+
     res.status(200).json(data);
   } catch (err) {
     next(err);
@@ -21,10 +21,10 @@ boxRouter.get("/", async (_req: Request, res: Response, next: NextFunction) => {
 // Get a single box by ID
 boxRouter.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // TODO: call USECASE instead of service directly
     const id = Number(req.params.id);
     const item = await boxService.get(id);
     if (!item) return res.status(404).json({ message: "Not Found" });
+
     res.status(200).json(item);
   } catch (err) {
     next(err);

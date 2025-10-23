@@ -1,10 +1,12 @@
 import { boxService } from "@/src/modules/inventory/services/box.service";
-import { BoxStatus, CreateBoxParam, CreateCrabInput, UpdateBoxParam, UpdateCrabInput } from "@/src/modules/inventory/types";
+import { BoxStatus, CreateBoxParam, CreateCrabInput, ListBoxesParams, UpdateBoxParam, UpdateCrabInput } from "@/src/modules/inventory/types";
 import { crabService } from "@/src/modules/inventory/services/crab.service";
 import { CrabStatus } from "@/src/modules/inventory/types";
 import { historyService } from "@/src/modules/history/history.service";
 import { HistoryAction, HistoryEntityType } from "@/src/modules/history/types";
 import { Inventory } from "./types";
+import { Box, Crab } from "@/src/modules/inventory/entities";
+import { d } from "drizzle-kit/index-BAUrj6Ib";
 
 export class InventoryUseCase {
   async getInventoryOverview(): Promise<any> {
@@ -102,7 +104,7 @@ export class InventoryUseCase {
 
   async updateCrabCheckout({
     boxId, status
-  }:{
+  }: {
     boxId: number,
     status: CrabStatus.SOLD | CrabStatus.DEAD
   }): Promise<boolean> {
@@ -129,6 +131,31 @@ export class InventoryUseCase {
         errorMessage = error.message;
       }
       throw new Error(`Error updating crab checkout: ${errorMessage}`);
+    }
+  }
+
+  async findBoxes(params: ListBoxesParams): Promise<Box[]> {
+    return boxService.list(params);
+  }
+
+  async findBoxById(id: number): Promise<Box | undefined> {
+    const box = await boxService.get(id);
+    return box;
+  }
+
+  async refreshBoxStatus(id: number): Promise<boolean> {
+    try {
+      const crabInBox = await crabService.list({ boxId: id, status: CrabStatus.IN });
+      if (crabInBox.length <= 1) {
+        await boxService.update(id, { status: BoxStatus.EMPTY });
+      }
+      return true;
+    } catch (error) {
+      let errorMessage = "Unknown error";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      throw new Error(`Error refreshing box status: ${errorMessage}`);
     }
   }
 
@@ -160,6 +187,11 @@ export class InventoryUseCase {
   }
 
   async removeBox(id: number): Promise<boolean> {
+    const crabInBox = await crabService.list({ boxId: id, status: CrabStatus.IN });
+    if (crabInBox.length > 0) {
+      throw new Error(`Cannot remove box with id ${id} because it contains crabs`);
+    }
+
     const removed = await boxService.remove(id);
 
     await historyService.create({
@@ -172,9 +204,27 @@ export class InventoryUseCase {
     return removed;
   }
 
+  async findCrabs(params: any): Promise<Crab[]> {
+    return crabService.list(params);
+  }
+
+  async findCrabById(id: number): Promise<Crab | undefined> {
+    const crab = await crabService.get(id);
+    return crab;
+  }
+
+  async findCrabByBoxId(boxId: number): Promise<Crab | undefined> {
+    const crab = await crabService.getByBoxId(boxId);
+    return crab;
+  }
+
   // Crab management methods with business logic
   async createCrab(data: CreateCrabInput): Promise<number> {
     const newCrabId = await crabService.create(data);
+
+    if (data.boxId) {
+      await boxService.update(data.boxId, { status: BoxStatus.FILLED });
+    }
 
     historyService.create({
       entityType: HistoryEntityType.CRAB,
@@ -187,29 +237,32 @@ export class InventoryUseCase {
   }
 
   async updateCrab(id: number, data: UpdateCrabInput): Promise<boolean> {
+    let boxId: number | undefined;
+    if (!data.boxId) {
+      boxId = (await crabService.get(id))?.boxId || undefined;
+      if (boxId) {
+        this.refreshBoxStatus(boxId);
+      }
+    }
+
     const updated = await crabService.update(id, data);
 
-    if (data.status === CrabStatus.SOLD || data.status === CrabStatus.DEAD) {
-      historyService.create({
-        entityType: HistoryEntityType.CRAB,
-        entityId: id,
-        action: HistoryAction.CHECKOUT,
-        data: JSON.stringify(data),
-      });
-    } else {
-      // TODO: Check if boxid changed, then action should be transfer
-      historyService.create({
-        entityType: HistoryEntityType.CRAB,
-        entityId: id,
-        action: HistoryAction.TRANSFER,
-        data: JSON.stringify(data),
-      });
-    }
+    historyService.create({
+      entityType: HistoryEntityType.CRAB,
+      entityId: id,
+      action: HistoryAction.UPDATE,
+      data: JSON.stringify(data),
+    });
 
     return updated;
   }
 
   async removeCrab(id: number): Promise<boolean> {
+    const boxId = (await crabService.get(id))?.boxId || undefined;
+    if (boxId) {
+      this.refreshBoxStatus(boxId);
+    }
+
     const removed = await crabService.remove(id);
 
     historyService.create({

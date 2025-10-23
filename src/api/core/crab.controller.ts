@@ -1,5 +1,6 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { crabService } from "../../modules/inventory/services/crab.service";
+import { inventoryUseCase, InventoryUseCase } from "@/src/usecases/inventory/inventory.usecase";
 
 // Router for Crabs. Mount as: app.use("/crabs", crabRouter)
 export const crabRouter = Router();
@@ -8,7 +9,7 @@ export const crabRouter = Router();
 crabRouter.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { status, boxId, orderBy, direction } = req.query;
-    const data = await crabService.list({
+    const data = await inventoryUseCase.findCrabs({
       status: status as any,
       boxId: boxId === undefined ? undefined : boxId === "null" ? null : Number(boxId),
       orderBy: orderBy as any,
@@ -24,7 +25,7 @@ crabRouter.get("/", async (req: Request, res: Response, next: NextFunction) => {
 crabRouter.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = Number(req.params.id);
-    const item = await crabService.get(id);
+    const item = await inventoryUseCase.findCrabById(id);
     if (!item) return res.status(404).json({ message: "Not Found" });
     res.status(200).json(item);
   } catch (err) {
@@ -35,7 +36,7 @@ crabRouter.get("/:id", async (req: Request, res: Response, next: NextFunction) =
 // Create a new crab
 crabRouter.post("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const id = await crabService.create(req.body);
+    const id = await inventoryUseCase.createCrab(req.body);
     res.status(201).json({ id });
   } catch (err) {
     next(err);
@@ -46,7 +47,7 @@ crabRouter.post("/", async (req: Request, res: Response, next: NextFunction) => 
 crabRouter.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = Number(req.params.id);
-    const ok = await crabService.update(id, req.body);
+    const ok = await inventoryUseCase.updateCrab(id, req.body);
     if (!ok) return res.status(404).json({ message: "Not Found" });
     res.status(200).json({ updated: true });
   } catch (err) {
@@ -58,7 +59,7 @@ crabRouter.put("/:id", async (req: Request, res: Response, next: NextFunction) =
 crabRouter.patch("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = Number(req.params.id);
-    const ok = await crabService.update(id, req.body);
+    const ok = await inventoryUseCase.updateCrab(id, req.body);
     if (!ok) return res.status(404).json({ message: "Not Found" });
     res.status(200).json({ updated: true });
   } catch (err) {
@@ -70,7 +71,7 @@ crabRouter.patch("/:id", async (req: Request, res: Response, next: NextFunction)
 crabRouter.delete("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = Number(req.params.id);
-    const ok = await crabService.remove(id);
+    const ok = await inventoryUseCase.removeCrab(id);
     if (!ok) return res.status(404).json({ message: "Not Found" });
     res.status(200).json({ deleted: true });
   } catch (err) {

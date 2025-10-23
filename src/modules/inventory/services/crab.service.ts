@@ -1,4 +1,4 @@
-import type { Crab } from "../schemas/crab.schema";
+import type { Crab } from "../entities/crab.entity";
 
 import { CrabRepository } from "../repositories/crab.repository";
 import { historyService } from "@/src/modules/history/history.service";

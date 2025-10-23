@@ -1,6 +1,7 @@
 import { and, asc, desc, eq, isNull, gte, lte } from "drizzle-orm";
 import { db } from "../../../db";
-import { crabs, type Crab, type NewCrab } from "../schemas/crab.schema";
+import { crabs, Crab as PersistedCrab, type NewCrab } from "../schemas/crab.schema";
+import { Crab } from "../entities/crab.entity";
 import type { CreateCrabInput, UpdateCrabInput, ListCrabsParams } from "../types";
 
 export const CrabRepository = {
@@ -19,21 +20,23 @@ export const CrabRepository = {
     const orderCol =
       orderBy === "updatedAt" ? crabs.updatedAt : orderBy === "weight" ? crabs.weight : crabs.createdAt;
 
-    return db
+    const result = await db
       .select()
       .from(crabs)
       .where(where.length ? (where.length === 1 ? where[0] : and(...where)) : undefined)
       .orderBy(direction === "asc" ? asc(orderCol) : desc(orderCol));
+
+    return result.map((row) => Crab.fromDatabase(row));
   },
 
   async get(id: number): Promise<Crab | undefined> {
     const rows = await db.select().from(crabs).where(eq(crabs.id, id)).limit(1);
-    return rows[0];
+    return Crab.fromDatabase(rows[0]);
   },
 
   async getByBoxId(boxId: number): Promise<Crab> {
     const rows = await db.select().from(crabs).where(eq(crabs.boxId, boxId)).limit(1);
-    return rows[0];
+    return Crab.fromDatabase(rows[0]);
   },
 
   async create(data: CreateCrabInput): Promise<number> {

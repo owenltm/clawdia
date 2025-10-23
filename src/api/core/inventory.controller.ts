@@ -25,7 +25,7 @@ inventoryRouter.get("/current", async (req: Request, res: Response, next: NextFu
 });
 
 // Add new crab to box
-inventoryRouter.post("/:boxId/checkIn", async (req: Request, res: Response, next: NextFunction) => {
+/* inventoryRouter.post("/:boxId/checkIn", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const boxId = parseInt(req.params.boxId);
     const crabData = req.body;
@@ -34,9 +34,9 @@ inventoryRouter.post("/:boxId/checkIn", async (req: Request, res: Response, next
   } catch (err) {
     next(err);
   }
-});
+}); */
 
-inventoryRouter.post("/:boxId/checkOut", async (req: Request, res: Response, next: NextFunction) => {
+/* inventoryRouter.post("/:boxId/checkOut", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const boxId = parseInt(req.params.boxId);
     const { status } = req.body;
@@ -50,4 +50,4 @@ inventoryRouter.post("/:boxId/checkOut", async (req: Request, res: Response, nex
   } catch (err) {
     next(err);
   }
-});
+}); */
