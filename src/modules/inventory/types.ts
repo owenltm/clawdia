@@ -19,9 +19,9 @@ export enum CrabStatus {
 export const CRAB_STATUS_VALUES = Object.values(CrabStatus) as [CrabStatus, ...CrabStatus[]];
 
 export type CreateBoxParam = {
-    "label": string,
-    "status": string,
-    "maxFill": number
+  "label": string,
+  "status"?: string,
+  "maxFill"?: number
 }
 
 export type UpdateBoxParam = Partial<CreateBoxParam>;
@@ -29,6 +29,10 @@ export type UpdateBoxParam = Partial<CreateBoxParam>;
 export type CreateCrabParam = {}
 
 export type UpdateCrabParam = Partial<CreateCrabParam>;
+
+export type ListBoxesParams = {
+  status?: BoxStatus
+}
 
 export type ListCrabsParams = {
   status?: CrabStatus;

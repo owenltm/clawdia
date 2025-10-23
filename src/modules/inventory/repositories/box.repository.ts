@@ -1,12 +1,19 @@
-import { eq, Update } from "drizzle-orm";
+import { eq, and, Update } from "drizzle-orm";
 import { db } from "../../../db";
 import { Box } from "../entities/box.entity";
 import { boxes, type NewBox } from "../schemas/box.schema";
-import { CreateBoxParam, UpdateBoxParam } from "../types";
+import { BoxStatus, CreateBoxParam, ListBoxesParams, UpdateBoxParam } from "../types";
 
 export const BoxRepository = {
-  async list(): Promise<Box[]> {
-    const persistedBoxes = await db.select().from(boxes);
+  async list(
+    { status }: ListBoxesParams = {}
+  ): Promise<Box[]> {
+    const where = [];
+    if (status) where.push(eq(boxes.status, status));
+
+    const persistedBoxes = await db.select()
+      .from(boxes)
+      .where(where.length ? (where.length === 1 ? where[0] : and(...where)) : undefined);
     return persistedBoxes.map(box => Box.fromDatabase(box));
   },
 

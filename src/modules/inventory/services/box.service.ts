@@ -1,10 +1,10 @@
 import type { Box } from "../entities";
 import { BoxRepository } from "../repositories/box.repository";
-import { CreateBoxParam, UpdateBoxParam } from "../types";
+import { CreateBoxParam, ListBoxesParams, UpdateBoxParam } from "../types";
 
 export class BoxService {
-  async list(): Promise<Box[]> {
-    return BoxRepository.list();
+  async list(params?: ListBoxesParams): Promise<Box[]> {
+    return BoxRepository.list(params);
   }
 
   async get(id: number): Promise<Box | undefined> {

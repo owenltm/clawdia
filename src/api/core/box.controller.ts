@@ -1,6 +1,7 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { boxService } from "../../modules//inventory/services/box.service";
 import { inventoryUseCase } from "../../usecases/inventory/inventory.usecase";
+import { ListBoxesParams } from "@/src/modules/inventory/types";
 
 // Router for Boxes. Mount as: app.use("/boxes", boxRouter)
 export const boxRouter = Router();
@@ -9,7 +10,8 @@ export const boxRouter = Router();
 boxRouter.get("/", async (_req: Request, res: Response, next: NextFunction) => {
   try {
     // TODO: call USECASE instead of service directly
-    const data = await boxService.list();
+    const params = _req.query as ListBoxesParams;
+    const data = await boxService.list(params);
     res.status(200).json(data);
   } catch (err) {
     next(err);
