@@ -1,16 +1,19 @@
 import express, { Request, Response, NextFunction } from "express";
-import ApiKeyMiddleware from "./middleware/authMiddleware";
+import passport from "passport";
+
+import { ApiKeyMiddleware } from "./middleware/authMiddleware";
 import { boxRouter } from "./api/core/box.controller";
 import { crabRouter } from "./api/core/crab.controller";
 import { financeRouter } from "./api/core/finance.controller";
 import { agentRouter } from "./api/agent/agent.controller";
 import { inventoryRouter } from "./api/core/inventory.controller";
+import { authRouter } from "./api/core/auth.controller";
 
 const app = express();
 
 // Middleware
 app.use(express.json());
-if(process.env.API_KEY){
+if (process.env.API_KEY) {
   app.use("/core", ApiKeyMiddleware);
   app.use("/agent", ApiKeyMiddleware);
 }
@@ -28,6 +31,7 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/agent", agentRouter);
 
 // Feature routes
+app.use("/core/auth", authRouter);
 app.use("/core/boxes", boxRouter);
 app.use("/core/crabs", crabRouter);
 app.use("/core/finance", financeRouter);

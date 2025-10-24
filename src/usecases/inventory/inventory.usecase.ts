@@ -146,7 +146,7 @@ export class InventoryUseCase {
   async refreshBoxStatus(id: number): Promise<boolean> {
     try {
       const crabInBox = await crabService.list({ boxId: id, status: CrabStatus.IN });
-      if (crabInBox.length <= 1) {
+      if (crabInBox.length < 1) {
         await boxService.update(id, { status: BoxStatus.EMPTY });
       }
       return true;
