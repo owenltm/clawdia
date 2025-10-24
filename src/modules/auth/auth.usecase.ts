@@ -5,6 +5,20 @@ import { hashPassword, comparePassword, getUserAuthToken } from "./utils";
 
 export class AuthUseCase {
 
+  async initializeAdminUserIfNeeded() {
+    const existingAdmin = await UserRepository.getByUsername("admin");
+    if (!existingAdmin) {
+      const hashedPassword = await hashPassword("password");
+      // TODO: Make default admin credentials configurable
+      await UserRepository.create({
+        username: "admin",
+        firstName: "Admin",
+        password: hashedPassword,
+        role: "admin",
+      } as CreateUserParams);
+    }
+  }
+
   async listUser(params: ListAuthParams = {}): Promise<SafeUser[]> {
     const users = await UserRepository.list(params);
     return users.map(user => user.toSafeObject());

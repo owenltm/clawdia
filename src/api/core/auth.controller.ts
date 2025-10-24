@@ -2,9 +2,21 @@ import { Router, Request, Response, NextFunction } from "express";
 import { ListAuthParams } from "@/src/modules/auth/types";
 import { authUseCase } from "@/src/modules/auth/auth.usecase";
 import passport from "passport";
-import { JwtAuthMiddleware, RoleAccessMiddleware } from "@/src/middleware/authMiddleware";
+import { ApiKeyMiddleware, JwtAuthMiddleware, RoleAccessMiddleware } from "@/src/middleware/authMiddleware";
 
 export const authRouter = Router();
+
+authRouter.post(
+  "/initialize-admin",
+  ApiKeyMiddleware,
+  async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    await authUseCase.initializeAdminUserIfNeeded();
+    res.status(200).json({ message: "Admin user initialized" });
+  } catch (err) {
+    next(err);
+  }
+});
 
 // Login endpoint
 authRouter.post("/login", async (req: Request, res: Response, next: NextFunction) => {

@@ -17,11 +17,17 @@ export const UserRepository = {
 
   async get(id: number): Promise<User | null> {
     const rows = await db.select().from(users).where(eq(users.id, id)).limit(1);
+    if(rows.length < 1) {
+      return null;
+    }
     return mapToDomainUser(rows[0]) || null;
   },
 
   async getByUsername(username: string): Promise<User | null> {
     const rows = await db.select().from(users).where(eq(users.username, username)).limit(1);
+    if(rows.length < 1) {
+      return null;
+    }
     return mapToDomainUser(rows[0]) || null;
   },
 
