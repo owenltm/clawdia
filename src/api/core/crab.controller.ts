@@ -1,9 +1,12 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { crabService } from "../../modules/inventory/services/crab.service";
 import { inventoryUseCase, InventoryUseCase } from "@/src/usecases/inventory/inventory.usecase";
+import { ApiKeyMiddleware } from "@/src/middleware/authMiddleware";
 
 // Router for Crabs. Mount as: app.use("/crabs", crabRouter)
 export const crabRouter = Router();
+
+crabRouter.use(ApiKeyMiddleware);
 
 // List all crabs
 crabRouter.get("/", async (req: Request, res: Response, next: NextFunction) => {

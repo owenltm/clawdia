@@ -14,7 +14,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 if (process.env.API_KEY) {
-  app.use("/core", ApiKeyMiddleware);
+  // app.use("/core", ApiKeyMiddleware);
   app.use("/agent", ApiKeyMiddleware);
 }
 

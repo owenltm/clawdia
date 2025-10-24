@@ -1,8 +1,11 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { financeUseCase } from "../../modules/finance/finance.usecase";
+import { ApiKeyMiddleware } from "@/src/middleware/authMiddleware";
 
 // Router for Finance. Mount as: app.use("/finance", financeRouter)
 export const financeRouter = Router();
+
+financeRouter.use(ApiKeyMiddleware);
 
 // GET version with query parameters
 financeRouter.get("/overview", async (req: Request, res: Response, next: NextFunction) => {

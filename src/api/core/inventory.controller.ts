@@ -1,9 +1,12 @@
+import { ApiKeyMiddleware } from "@/src/middleware/authMiddleware";
 import { CrabStatus } from "@/src/modules/inventory/types";
 import { inventoryUseCase } from "@/src/usecases/inventory/inventory.usecase";
 import { Router, Request, Response, NextFunction } from "express";
 
 // Router for Inventory. Mount as: app.use("/inventory", inventoryRouter)
 export const inventoryRouter = Router();
+
+inventoryRouter.use(ApiKeyMiddleware);
 
 inventoryRouter.get("/overview", async (req: Request, res: Response, next: NextFunction) => {
   try {

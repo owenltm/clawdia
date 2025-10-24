@@ -2,9 +2,12 @@ import { Router, Request, Response, NextFunction } from "express";
 import { boxService } from "../../modules//inventory/services/box.service";
 import { inventoryUseCase } from "../../usecases/inventory/inventory.usecase";
 import { ListBoxesParams } from "@/src/modules/inventory/types";
+import { ApiKeyMiddleware } from "@/src/middleware/authMiddleware";
 
 // Router for Boxes. Mount as: app.use("/boxes", boxRouter)
 export const boxRouter = Router();
+
+boxRouter.use(ApiKeyMiddleware);
 
 // List all boxes
 boxRouter.get("/", async (_req: Request, res: Response, next: NextFunction) => {
