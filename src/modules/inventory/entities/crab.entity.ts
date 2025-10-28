@@ -14,28 +14,28 @@ export class Crab {
   createdAt: Date;
   updatedAt: Date;
 
-  constructor(
-    id: number,
-    weight: number,
-    supplier: string,
-    status: CrabStatus,
-    checkInDate: Date,
-    createdAt: Date,
-    updatedAt: Date,
-    checkOutDate?: Date | null,
-    boxId?: number | null,
-    notes?: string
-  ) {
-    this.id = id;
-    this.weight = weight;
-    this.supplier = supplier;
-    this.status = status;
-    this.checkInDate = checkInDate;
-    this.checkOutDate = checkOutDate;
-    this.boxId = boxId;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
-    this.notes = notes;
+  constructor(params: {
+    id: number;
+    weight: number;
+    supplier: string;
+    status: CrabStatus;
+    checkInDate: Date;
+    createdAt: Date;
+    updatedAt: Date;
+    checkOutDate?: Date | null;
+    boxId?: number | null;
+    notes?: string;
+  }) {
+    this.id = params.id;
+    this.weight = params.weight;
+    this.supplier = params.supplier;
+    this.status = params.status;
+    this.checkInDate = params.checkInDate;
+    this.checkOutDate = params.checkOutDate;
+    this.boxId = params.boxId;
+    this.notes = params.notes;
+    this.createdAt = params.createdAt;
+    this.updatedAt = params.updatedAt;
   }
 
   // Helper methods
@@ -127,18 +127,18 @@ export class Crab {
 
   // Mapper methods
   static fromDatabase(dbCrab: CrabSchema): Crab {
-    return new Crab(
-      dbCrab.id,
-      Number(dbCrab.weight), // Convert decimal to number
-      dbCrab.supplier,
-      dbCrab.status as CrabStatus,
-      new Date(dbCrab.checkInDate), // Convert date string to Date
-      dbCrab.createdAt,
-      dbCrab.updatedAt,
-      dbCrab.checkOutDate ? new Date(dbCrab.checkOutDate) : null,
-      dbCrab.boxId,
-      dbCrab.notes || undefined
-    );
+    return new Crab({
+      id: dbCrab.id,
+      weight: Number(dbCrab.weight), // Convert decimal to number
+      supplier: dbCrab.supplier,
+      status: dbCrab.status as CrabStatus,
+      checkInDate: new Date(dbCrab.checkInDate), // Convert date string to Date
+      createdAt: dbCrab.createdAt,
+      updatedAt: dbCrab.updatedAt,
+      checkOutDate: dbCrab.checkOutDate ? new Date(dbCrab.checkOutDate) : null,
+      boxId: dbCrab.boxId,
+      notes: dbCrab.notes || undefined,
+    });
   }
 
   static fromDatabaseList(dbCrabs: CrabSchema[]): Crab[] {
