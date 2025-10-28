@@ -1,5 +1,6 @@
 import { CrabStatus } from "../types";
 import { Crab as CrabSchema } from "../schemas/crab.schema";
+import { db } from "@/src/db";
 
 export class Crab {
   id: number;
@@ -34,6 +35,7 @@ export class Crab {
     this.boxId = boxId;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
+    this.notes = notes;
   }
 
   // Helper methods
@@ -134,7 +136,8 @@ export class Crab {
       dbCrab.createdAt,
       dbCrab.updatedAt,
       dbCrab.checkOutDate ? new Date(dbCrab.checkOutDate) : null,
-      dbCrab.boxId
+      dbCrab.boxId,
+      dbCrab.notes || undefined
     );
   }
 
