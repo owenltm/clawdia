@@ -67,11 +67,26 @@ export class AuthUseCase {
   }
 
   async updateUser(id: number, data: Partial<CreateUserParams>): Promise<boolean> {
-    // TODO: Might separate update password logic
-    if (data.password) {
-      data.password = await hashPassword(data.password);
-    }
     return await UserRepository.update(id, data);
+  }
+
+  async updateUserPassword(id: number, currentPassword: string, newPassword: string): Promise<boolean> {
+    const user = await UserRepository.get(id);
+    if (!user) {
+      // TODO: Return error in response
+      return false;
+    }
+
+    // Compare the provided password with the hashed password
+    const isValid = await comparePassword(currentPassword, user.password);
+    if (!isValid) {
+      // TODO: Return error in response
+      return false;
+    }
+
+    // Hash the new password and update the user
+    const newPasswordHash = await hashPassword(newPassword);
+    return await UserRepository.update(id, { password: newPasswordHash });
   }
 
   async removeUser(id: number): Promise<boolean> {

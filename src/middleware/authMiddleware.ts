@@ -44,13 +44,26 @@ type User = {
   role: string;
 }
 
-export function RoleAccessMiddleware(requiredRole: string) {
+export function RoleAccessMiddleware(requiredRoles: string[]) {
   return (req: Request, res: Response, next: NextFunction) => {
     const user = req.user as User;
 
-    if(user.role !== requiredRole) {
+    if(requiredRoles.length === 0) {
+      return next();
+    }
+
+    if(requiredRoles.includes('self')) {
+      if (user.id === Number(req.params.id)) {
+        return next();
+      }
+    }
+
+    // Check if user has the required role
+    const allowedRoles = requiredRoles.filter(role => role !== 'self');
+    if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
       return res.status(403).json({ error: "Insufficient role" });
     }
-    next();
+    
+    return next();
   }
 }
