@@ -15,7 +15,7 @@ export class CrabService {
     return CrabRepository.get(id);
   }
 
-  async getByBoxId(boxId: number): Promise<Crab> {
+  async getByBoxId(boxId: number): Promise<Crab[]> {
     return CrabRepository.getByBoxId(boxId);
   }
 

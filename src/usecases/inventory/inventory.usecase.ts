@@ -69,71 +69,6 @@ export class InventoryUseCase {
     });
   }
 
-  async newCrabCheckin({
-    boxId,
-    data,
-  }: {
-    boxId: number;
-    data: Omit<CreateCrabInput, 'boxId'>;
-  }): Promise<number> {
-    try {
-      // const box = await boxService.getByLabel(boxLabel);
-      // if (!box) {
-      //   throw new Error(`Box with label ${boxLabel} not found`);
-      // }
-
-      const [newCrabId, updatedBox] = await Promise.all([
-        await crabService.create({
-          ...data,
-          boxId, // Assuming CreateCrabInput has a boxId field
-        }),
-        await boxService.update(boxId, {
-          status: BoxStatus.FILLED,
-        })
-      ]);
-
-      return newCrabId;
-    } catch (error) {
-      let errorMessage = "Unknown error";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      throw new Error(`Error check in crab: ${errorMessage}`);
-    }
-  }
-
-  async updateCrabCheckout({
-    boxId, status
-  }: {
-    boxId: number,
-    status: CrabStatus.SOLD | CrabStatus.DEAD
-  }): Promise<boolean> {
-    try {
-      // const box = await boxService.getByLabel(boxLabel);
-      // if (!box) {
-      //   throw new Error(`Box with label ${boxLabel} not found`);
-      // }
-
-      const crab = await crabService.getByBoxId(boxId);
-      if (!crab) {
-        throw new Error(`No crab found in box with id ${boxId}`);
-      }
-
-      const [updatedCrab, updatedBox] = await Promise.all([
-        crabService.update(crab.id, { status, checkOutDate: new Date(), boxId: null }),
-        boxService.update(crab.boxId!, { status: BoxStatus.EMPTY })
-      ]);
-
-      return updatedCrab && updatedBox;
-    } catch (error) {
-      let errorMessage = "Unknown error";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      throw new Error(`Error updating crab checkout: ${errorMessage}`);
-    }
-  }
-
   async findBoxes(params: ListBoxesParams): Promise<Box[]> {
     return boxService.list(params);
   }
@@ -174,6 +109,16 @@ export class InventoryUseCase {
   }
 
   async updateBox(id: number, data: UpdateBoxParam): Promise<boolean> {
+    // TODO: If updating to EMPTY/UNAVAILABLE, ensure no crabs are in the box
+    const box = await this.findBoxById(id);
+    if (!box) {
+      throw new Error(`Box with id ${id} not found`);
+    }
+
+    if (!box.canUpdate(data)) {
+      throw new Error(`Cannot update box with id ${id} because conflicting constraints`);
+    }
+
     const updated = await boxService.update(id, data);
 
     await historyService.create({
@@ -213,9 +158,9 @@ export class InventoryUseCase {
     return crab;
   }
 
-  async findCrabByBoxId(boxId: number): Promise<Crab | undefined> {
-    const crab = await crabService.getByBoxId(boxId);
-    return crab;
+  async findCrabByBoxId(boxId: number): Promise<Crab[] | undefined> {
+    const crabs = await crabService.getByBoxId(boxId);
+    return crabs;
   }
 
   // Crab management methods with business logic
@@ -223,6 +168,13 @@ export class InventoryUseCase {
     const newCrabId = await crabService.create(data);
 
     if (data.boxId) {
+      const box = await boxService.get(data.boxId);
+      const currentFill = (await this.findCrabByBoxId(data.boxId))?.length || 0;
+
+      if (box && currentFill >= box.maxFill) {
+        throw new Error(`Cannot add crab as Box ${box.label} is at max capacity`)
+      }
+
       await boxService.update(data.boxId, { status: BoxStatus.FILLED });
     }
 
@@ -237,11 +189,22 @@ export class InventoryUseCase {
   }
 
   async updateCrab(id: number, data: UpdateCrabInput): Promise<boolean> {
-    let boxId: number | undefined;
+    let boxId: number | undefined = data.boxId || undefined;
     if (!data.boxId) {
       boxId = (await crabService.get(id))?.boxId || undefined;
       if (boxId) {
         this.refreshBoxStatus(boxId);
+      }
+    }
+
+    if(boxId){
+      const box = await boxService.get(boxId);
+      const currentFill = (await this.findCrabByBoxId(boxId))?.length || 0;
+  
+      console.log(currentFill, box?.maxFill);
+  
+      if (box && currentFill >= box.maxFill) {
+        throw new Error(`Cannot add crab as Box ${box.label} is at max capacity`)
       }
     }
 

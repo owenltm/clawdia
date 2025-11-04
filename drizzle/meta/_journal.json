@@ -64,6 +64,13 @@
       "when": 1761274450498,
       "tag": "0008_typical_nitro",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1762231216188,
+      "tag": "0009_lyrical_ultragirl",
+      "breakpoints": true
     }
   ]
 }

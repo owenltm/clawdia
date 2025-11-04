@@ -10,6 +10,7 @@ export const boxes = mysqlTable(
     label: varchar("label", { length: 255 }).notNull(),
     status: mysqlEnum("status", BOX_STATUS_VALUES).notNull().default(BoxStatus.EMPTY),
     maxFill: int("max_fill").notNull().default(1),
+    notes: varchar("notes", { length: 255 }),
     createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow().onUpdateNow(),
   },

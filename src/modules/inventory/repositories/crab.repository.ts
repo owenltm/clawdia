@@ -34,9 +34,9 @@ export const CrabRepository = {
     return Crab.fromDatabase(rows[0]);
   },
 
-  async getByBoxId(boxId: number): Promise<Crab> {
-    const rows = await db.select().from(crabs).where(eq(crabs.boxId, boxId)).limit(1);
-    return Crab.fromDatabase(rows[0]);
+  async getByBoxId(boxId: number): Promise<Crab[]> {
+    const rows = await db.select().from(crabs).where(eq(crabs.boxId, boxId));
+    return rows.map(Crab.fromDatabase);
   },
 
   async create(data: CreateCrabInput): Promise<number> {

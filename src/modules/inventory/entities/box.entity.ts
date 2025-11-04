@@ -1,4 +1,4 @@
-import { BoxStatus } from "../types";
+import { BoxStatus, UpdateBoxParam } from "../types";
 import { Box as PersistedBox } from "../schemas/box.schema";
 
 export class Box {
@@ -6,6 +6,7 @@ export class Box {
   label: string;
   status: BoxStatus;
   maxFill: number;
+  notes: string | null;
   createdAt: Date;
   updatedAt: Date;
 
@@ -14,6 +15,7 @@ export class Box {
     label: string,
     status: BoxStatus,
     maxFill: number,
+    notes: string | null,
     createdAt: Date,
     updatedAt: Date
   ) {
@@ -21,40 +23,32 @@ export class Box {
     this.label = label;
     this.status = status;
     this.maxFill = maxFill;
+    this.notes = notes
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
 
   // Helper methods
-  isEmpty(): boolean {
-    return this.status === BoxStatus.EMPTY;
+  isAvailable(): boolean {
+    return this.status !== BoxStatus.UNAVAILABLE;
+  }
+
+  isMaxFilled(currentFill: number): boolean {
+    return currentFill >= this.maxFill;
   }
 
   isFilled(): boolean {
     return this.status === BoxStatus.FILLED;
   }
 
-  fill(): void {
-    this.status = BoxStatus.FILLED;
-    this.updatedAt = new Date();
-  }
-
-  empty(): void {
-    this.status = BoxStatus.EMPTY;
-    this.updatedAt = new Date();
-  }
-
-  updateLabel(newLabel: string): void {
-    this.label = newLabel;
-    this.updatedAt = new Date();
-  }
-
-  updateMaxFill(newMaxFill: number): void {
-    if (newMaxFill <= 0) {
-      throw new Error("Max fill must be greater than 0");
+  canUpdate(update: UpdateBoxParam): boolean {
+    if (update.status === BoxStatus.EMPTY || update.status === BoxStatus.UNAVAILABLE) {
+      if (this.isFilled()) {
+        console.error(`Cannot update box with id ${this.id} to status ${update.status} because it contains crabs`);
+        return false;
+      }
     }
-    this.maxFill = newMaxFill;
-    this.updatedAt = new Date();
+    return true;
   }
 
   toJSON() {
@@ -75,6 +69,7 @@ export class Box {
       dbBox.label,
       dbBox.status as BoxStatus,
       dbBox.maxFill,
+      dbBox.notes,
       dbBox.createdAt,
       dbBox.updatedAt
     );
@@ -89,6 +84,7 @@ export class Box {
       label: this.label,
       status: this.status,
       maxFill: this.maxFill,
+      notes: this.notes,
       updatedAt: this.updatedAt,
     };
   }

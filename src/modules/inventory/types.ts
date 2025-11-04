@@ -7,6 +7,7 @@ export type UpdateCrabInput = Partial<CreateCrabInput>;
 export enum BoxStatus {
   FILLED = "filled",
   EMPTY = "empty",
+  UNAVAILABLE = "unavailable",
 }
 
 export const BOX_STATUS_VALUES = Object.values(BoxStatus) as [BoxStatus, ...BoxStatus[]];
