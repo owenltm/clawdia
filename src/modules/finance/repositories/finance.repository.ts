@@ -69,17 +69,19 @@ export const FinanceRepository = {
   },
 
   async update(id: number, data: Partial<CreateFinanceParam>): Promise<boolean> {
-    // const updateData: UpdateFinanceInput = {};
-    // if (data.type !== undefined) updateData.type = data.type as FinanceType;
-    // if (data.amount !== undefined) updateData.amount = String(data.amount);
-    // if (data.category !== undefined) updateData.category = data.category as FinanceCategory;
-    // if (data.referenceId !== undefined) updateData.referenceId = data.referenceId;
-    // if (data.description !== undefined) updateData.description = data.description;
+    // Map and convert data types properly
+    const updateData: Partial<CreateFinanceInput> = {};
+    if (data.type !== undefined) updateData.type = data.type as FinanceType;
+    if (data.amount !== undefined) updateData.amount = String(data.amount);
+    if (data.category !== undefined) updateData.category = data.category as FinanceCategory;
+    if (data.referenceId !== undefined) updateData.referenceId = data.referenceId;
+    if (data.description !== undefined) updateData.description = data.description;
+    if (data.date !== undefined) updateData.date = new Date(data.date);
 
     // TODO: Check mapping for category with type
     const res = await db
       .update(financeJournal)
-      .set(data as Partial<CreateFinanceInput>)
+      .set(updateData)
       .where(eq(financeJournal.id, id));
     const resultObj: any = Array.isArray(res) ? res[0] : res;
     const affectedRows = resultObj?.affectedRows ?? resultObj?.rowsAffected;
