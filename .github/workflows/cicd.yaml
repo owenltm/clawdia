@@ -44,10 +44,10 @@ jobs:
               echo "Deploying to staging..."
               docker stop clawdia-service-staging || true
               docker rm clawdia-service-staging || true
-              docker run -d --restart always --name clawdia-service-staging -p 4110:3000 -e DATABASE_URL=${{ secrets.DATABASE_URL }} -e API_KEY=${{ secrets.API_KEY }} -e GOOGLE_GENERATIVE_AI_API_KEY=${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }} clawdia-service:latest
+              docker run -d --restart always --name clawdia-service-staging -p 4110:3000 -e DATABASE_URL=${{ secrets.DATABASE_URL }} -e API_KEY=${{ secrets.API_KEY }} -e GOOGLE_GENERATIVE_AI_API_KEY=${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }} -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} clawdia-service:latest
             elif [ "${{ github.ref_name }}" = "master" ]; then
               echo "Deploying to production..."
               docker stop clawdia-service-prod || true
               docker rm clawdia-service-prod || true
-              docker run -d --restart always --name clawdia-service-prod -p 4100:3000 -e DATABASE_URL=${{ secrets.DATABASE_URL }} -e API_KEY=${{ secrets.API_KEY }} -e GOOGLE_GENERATIVE_AI_API_KEY=${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }} clawdia-service:latest
+              docker run -d --restart always --name clawdia-service-prod -p 4100:3000 -e DATABASE_URL=${{ secrets.DATABASE_URL }} -e API_KEY=${{ secrets.API_KEY }} -e GOOGLE_GENERATIVE_AI_API_KEY=${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }} -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} clawdia-service:latest
             fi
