@@ -24,3 +24,18 @@ export type UpdatePasswordParams = {
   currentPassword: string;
   newPassword: string;
 };
+
+export type CreateRefreshTokenInput = {
+  userId: number;
+  tokenId: string;
+};
+
+export type UpdateRefreshTokenInput = {
+  tokenId?: string;
+  isRevoked?: boolean;
+};
+
+export type ListRefreshTokenParams = {
+  userId?: number;
+  isRevoked?: boolean;
+};

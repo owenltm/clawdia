@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction } from "express";
 import { ListAuthParams, UpdatePasswordParams } from "@/src/modules/auth/types";
 import { authUseCase } from "@/src/modules/auth/auth.usecase";
 import passport from "passport";
-import { ApiKeyMiddleware, JwtAuthMiddleware, RoleAccessMiddleware } from "@/src/middleware/authMiddleware";
+import { ApiKeyMiddleware, JwtAuthMiddleware, RefreshTokenMiddleware, RequestUser, RoleAccessMiddleware } from "@/src/middleware/authMiddleware";
 import { Update } from "drizzle-orm";
 import { User } from "@/src/modules/auth/entities/user.entity";
 
@@ -41,8 +41,33 @@ authRouter.post("/login", async (req: Request, res: Response, next: NextFunction
   }
 });
 
+// Refresh token endpoint
+authRouter.post("/refresh", RefreshTokenMiddleware, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = req.user as RequestUser;
+    const result = await authUseCase.refreshToken(user.id, user.tokenId);
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);   
+  }
+});
+
 // * Apply JWT authentication middleware to all routes below
 authRouter.use(JwtAuthMiddleware);
+
+authRouter.post("/logout",
+  async (_req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = _req.user as RequestUser;
+
+      const result = await authUseCase.logout(user.id, user.tokenId);
+
+      res.status(200).json({ success: result });
+    } catch (err) {
+      next(err);
+    }
+  }
+)
 
 // List all auth users
 authRouter.get("/",

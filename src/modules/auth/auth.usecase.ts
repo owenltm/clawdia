@@ -1,7 +1,10 @@
+import { ref } from "process";
 import { User, SafeUser } from "./entities/user.entity";
+import { RefreshTokenRepository } from "./repositories/refreshToken.repository";
 import { UserRepository } from "./repositories/user.repository";
 import { ListAuthParams, CreateUserParams } from "./types";
-import { hashPassword, comparePassword, getUserAuthToken } from "./utils";
+import { hashPassword, comparePassword, getUserAuthToken, getUserRefreshToken, getRandomTokenId } from "./utils";
+import { refreshTokenService } from "./services/refreshToken.services";
 
 export class AuthUseCase {
 
@@ -45,25 +48,67 @@ export class AuthUseCase {
   async login(username: string, password: string): Promise<any> {
     // Fetch user with password for authentication
     const user = await UserRepository.getByUsername(username);
-    
+
     if (!user) {
       return null;
     }
 
     // Compare the provided password with the hashed password
     const isValid = await comparePassword(password, user.password);
-    
+
     if (!isValid) {
       return null;
     }
 
-    const token = getUserAuthToken(user);
+    const userTokenCount = (await RefreshTokenRepository.getByUserId(user.id)).length;
+    const tokenId = `${userTokenCount + 1}${getRandomTokenId()}`;
 
-    // Return user without password
+    await RefreshTokenRepository.create({
+      userId: user.id,
+      tokenId,
+    });
+
+    const accessToken = getUserAuthToken(user, tokenId);
+    const refreshToken = getUserRefreshToken(user, tokenId);
+
     return {
-      user: user.toSafeObject(),
-      token,
+      accessToken,
+      refreshToken,
     };
+  }
+
+  async refreshToken(userId: number, tokenId: string): Promise<any> {
+    try {
+      if(!refreshTokenService.isRefreshTokenValid(tokenId)){
+        return null;
+      }
+
+      const user = await UserRepository.get(userId);
+      if (!user) {
+        return null;
+      }
+
+      const accessToken = getUserAuthToken(user, tokenId);
+      const refreshToken = getUserRefreshToken(user, tokenId);
+
+      return {
+        accessToken,
+        refreshToken,
+      }
+    } catch (error) {
+      console.error("Error during token refresh:", error);
+      return null;
+    }
+  }
+
+  async logout(userId: number, tokenId: string): Promise<boolean> {
+    try {
+      const deleteResult = await RefreshTokenRepository.revokeTokenId(tokenId);
+      return deleteResult;
+    } catch (error) {
+      console.error("Error during logout:", error);
+      return false;
+    }
   }
 
   async updateUser(id: number, data: Partial<CreateUserParams>): Promise<boolean> {

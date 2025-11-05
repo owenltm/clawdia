@@ -71,6 +71,20 @@
       "when": 1762231216188,
       "tag": "0009_lyrical_ultragirl",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1762313471509,
+      "tag": "0010_hot_guardian",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1762324193699,
+      "tag": "0011_outstanding_edwin_jarvis",
+      "breakpoints": true
     }
   ]
 }
