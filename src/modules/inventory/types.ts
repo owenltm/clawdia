@@ -1,5 +1,5 @@
-import { number } from "zod";
 import type { NewCrab } from "./schemas/crab.schema";
+import { Crab } from "./entities";
 
 export type CreateCrabInput = Omit<NewCrab, "id" | "createdAt" | "updatedAt">;
 export type UpdateCrabInput = Partial<CreateCrabInput>;
@@ -45,3 +45,11 @@ export type ListCrabsParams = {
   orderBy?: "createdAt" | "updatedAt" | "weight";
   direction?: "asc" | "desc";
 };
+
+export type Inventory = {
+  id: number,
+  label: string,
+  status: BoxStatus,
+  maxFill: number,
+  content: Crab[]
+}

@@ -1,6 +1,6 @@
 import { ApiKeyMiddleware } from "@/src/middleware/authMiddleware";
 import { CrabStatus } from "@/src/modules/inventory/types";
-import { inventoryUseCase } from "@/src/usecases/inventory/inventory.usecase";
+import { inventoryUseCase } from "@/src/modules/inventory/inventory.usecase";
 import { Router, Request, Response, NextFunction } from "express";
 
 // Router for Inventory. Mount as: app.use("/inventory", inventoryRouter)

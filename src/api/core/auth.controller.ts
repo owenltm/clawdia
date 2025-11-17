@@ -5,6 +5,7 @@ import passport from "passport";
 import { ApiKeyMiddleware, JwtAuthMiddleware, RefreshTokenMiddleware, RequestUser, RoleAccessMiddleware } from "@/src/middleware/authMiddleware";
 import { Update } from "drizzle-orm";
 import { User } from "@/src/modules/auth/entities/user.entity";
+import { UnauthorizedError } from "@/src/errors/HttpError";
 
 export const authRouter = Router();
 
@@ -88,7 +89,10 @@ authRouter.get("/me",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user = req.user as User;
-      if (!user) return res.status(404).json({ message: "Not Found" });
+      if (!user) {
+        next(new UnauthorizedError("User not found"));
+        return;
+      };
 
       res.status(200).json(user);
     } catch (err) {

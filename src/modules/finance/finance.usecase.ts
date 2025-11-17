@@ -1,3 +1,4 @@
+import { NotFoundError } from "@/src/errors/HttpError";
 import type { FinanceJournal } from "./entities/finance.entity";
 import { FinanceRepository } from "./repositories/finance.repository";
 import type { ListFinanceParams, DailyFinanceSummary, CreateFinanceParam } from "./types";
@@ -69,7 +70,13 @@ export class FinanceUseCase {
   }
 
   async get(id: number): Promise<FinanceJournal | undefined> {
-    return FinanceRepository.get(id);
+    const finance = await FinanceRepository.get(id);
+
+    if(!finance) {
+      throw new NotFoundError("Finance");
+    }
+    
+    return finance;
   }
 
   async create(data: CreateFinanceParam): Promise<number> {

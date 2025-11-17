@@ -8,6 +8,7 @@ import { financeRouter } from "./api/core/finance.controller";
 import { agentRouter } from "./api/agent/agent.controller";
 import { inventoryRouter } from "./api/core/inventory.controller";
 import { authRouter } from "./api/core/auth.controller";
+import { HttpError } from "./errors/HttpError";
 
 const app = express();
 
@@ -44,7 +45,14 @@ app.use((req: Request, res: Response) => {
 
 // Error handler
 app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
-  console.error(err);
+  console.error(err.message);
+  if (err instanceof HttpError) {
+    return res.status(err.statusCode).json({
+      error: err.message,
+      code: err.code
+    });
+  }
+
   res.status(500).json({ message: "Internal Server Error" });
 });
 

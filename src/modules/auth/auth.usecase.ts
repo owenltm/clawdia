@@ -5,21 +5,24 @@ import { UserRepository } from "./repositories/user.repository";
 import { ListAuthParams, CreateUserParams } from "./types";
 import { hashPassword, comparePassword, getUserAuthToken, getUserRefreshToken, getRandomTokenId } from "./utils";
 import { refreshTokenService } from "./services/refreshToken.services";
+import { BadRequestError, NotFoundError } from "@/src/errors/HttpError";
 
 export class AuthUseCase {
 
   async initializeAdminUserIfNeeded() {
     const existingAdmin = await UserRepository.getByUsername("admin");
-    if (!existingAdmin) {
-      const hashedPassword = await hashPassword("password");
-      // TODO: Make default admin credentials configurable
-      await UserRepository.create({
-        username: "admin",
-        firstName: "Admin",
-        password: hashedPassword,
-        role: "admin",
-      } as CreateUserParams);
+    if (existingAdmin) {
+      throw new Error("Default admin user already exists");
     }
+
+    const hashedPassword = await hashPassword("password");
+    // TODO: Make default admin credentials configurable
+    await UserRepository.create({
+      username: "admin",
+      firstName: "Admin",
+      password: hashedPassword,
+      role: "admin",
+    } as CreateUserParams);
   }
 
   async listUser(params: ListAuthParams = {}): Promise<SafeUser[]> {
@@ -29,12 +32,15 @@ export class AuthUseCase {
 
   async getUserById(id: number): Promise<SafeUser | null> {
     const user = await UserRepository.get(id);
-    return user ? user.toSafeObject() : null;
+
+    if (!user) {
+      throw new NotFoundError("User not found");
+    }
+
+    return user.toSafeObject();
   }
 
   async createUser(data: CreateUserParams): Promise<number> {
-    console.log("Creating user with data:", data);
-
     const hashedPassword = hashPassword(data.password);
     const userData = {
       ...data,
@@ -50,14 +56,14 @@ export class AuthUseCase {
     const user = await UserRepository.getByUsername(username);
 
     if (!user) {
-      return null;
+      return new BadRequestError("Invalid credentials");
     }
 
     // Compare the provided password with the hashed password
     const isValid = await comparePassword(password, user.password);
 
     if (!isValid) {
-      return null;
+      return new BadRequestError("Invalid credentials");
     }
 
     const userTokenCount = (await RefreshTokenRepository.getByUserId(user.id)).length;
@@ -80,12 +86,12 @@ export class AuthUseCase {
   async refreshToken(userId: number, tokenId: string): Promise<any> {
     try {
       if(!refreshTokenService.isRefreshTokenValid(tokenId)){
-        return null;
+        return new BadRequestError("Invalid refresh token");
       }
 
       const user = await UserRepository.get(userId);
       if (!user) {
-        return null;
+        return new BadRequestError("Invalid refresh token");
       }
 
       const accessToken = getUserAuthToken(user, tokenId);
@@ -97,7 +103,7 @@ export class AuthUseCase {
       }
     } catch (error) {
       console.error("Error during token refresh:", error);
-      return null;
+      throw error;
     }
   }
 
@@ -107,7 +113,7 @@ export class AuthUseCase {
       return deleteResult;
     } catch (error) {
       console.error("Error during logout:", error);
-      return false;
+      throw error;
     }
   }
 
@@ -118,15 +124,13 @@ export class AuthUseCase {
   async updateUserPassword(id: number, currentPassword: string, newPassword: string): Promise<boolean> {
     const user = await UserRepository.get(id);
     if (!user) {
-      // TODO: Return error in response
-      return false;
+      throw new NotFoundError("User not found");
     }
 
     // Compare the provided password with the hashed password
     const isValid = await comparePassword(currentPassword, user.password);
     if (!isValid) {
-      // TODO: Return error in response
-      return false;
+      throw new BadRequestError("Invalid current password");
     }
 
     // Hash the new password and update the user

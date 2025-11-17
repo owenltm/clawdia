@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { crabService } from "../../modules/inventory/services/crab.service";
-import { inventoryUseCase, InventoryUseCase } from "@/src/usecases/inventory/inventory.usecase";
+import { inventoryUseCase, InventoryUseCase } from "@/src/modules/inventory/inventory.usecase";
 import { ApiKeyMiddleware } from "@/src/middleware/authMiddleware";
 
 // Router for Crabs. Mount as: app.use("/crabs", crabRouter)

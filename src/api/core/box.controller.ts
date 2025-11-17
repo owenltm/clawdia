@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { boxService } from "../../modules//inventory/services/box.service";
-import { inventoryUseCase } from "../../usecases/inventory/inventory.usecase";
+import { inventoryUseCase } from "../../modules/inventory/inventory.usecase";
 import { ListBoxesParams } from "@/src/modules/inventory/types";
 import { ApiKeyMiddleware } from "@/src/middleware/authMiddleware";
 

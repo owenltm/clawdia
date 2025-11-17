@@ -7,6 +7,7 @@ import { HistoryAction, HistoryEntityType } from "@/src/modules/history/types";
 import { Inventory } from "./types";
 import { Box, Crab } from "@/src/modules/inventory/entities";
 import { d } from "drizzle-kit/index-BAUrj6Ib";
+import { NotFoundError } from "@/src/errors/HttpError";
 
 export class InventoryUseCase {
   async getInventoryOverview(): Promise<any> {
@@ -112,7 +113,7 @@ export class InventoryUseCase {
     // TODO: If updating to EMPTY/UNAVAILABLE, ensure no crabs are in the box
     const box = await this.findBoxById(id);
     if (!box) {
-      throw new Error(`Box with id ${id} not found`);
+      throw new NotFoundError(`Box with id ${id}`);
     }
 
     if (!box.canUpdate(data)) {

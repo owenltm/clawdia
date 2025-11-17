@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTool } from "@mastra/core/tools";
 
-import { inventoryUseCase } from "@/src/usecases/inventory/inventory.usecase";
+import { inventoryUseCase } from "@/src/modules/inventory/inventory.usecase";
 import { CrabStatus } from "@/src/modules/inventory/types";
 
 export const crabCheckIn = createTool({
