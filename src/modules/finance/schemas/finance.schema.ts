@@ -1,6 +1,6 @@
 import { mysqlTable, int, varchar, mysqlEnum, timestamp, decimal, index } from "drizzle-orm/mysql-core";
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
-import { FINANCE_CATEGORY_VALUES, FINANCE_TYPE_VALUES } from "./types";
+import { FINANCE_CATEGORY_VALUES, FINANCE_TYPE_VALUES } from "../types";
 
 export const financeJournal = mysqlTable(
   "finance_journal",
@@ -11,6 +11,7 @@ export const financeJournal = mysqlTable(
     category: mysqlEnum("category", FINANCE_CATEGORY_VALUES).notNull(),
     referenceId: int("reference_id"),
     description: varchar("description", { length: 255 }),
+    date: timestamp("date", { mode: "date" }).notNull(),
     createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   },
   (table) => ({

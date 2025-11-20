@@ -1,0 +1,1 @@
+ALTER TABLE `refresh_tokens` ADD `is_revoked` boolean DEFAULT false NOT NULL;

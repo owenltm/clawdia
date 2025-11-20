@@ -3,7 +3,7 @@ import { z } from "zod";
  
 export const callInventoryAgentTool = createTool({
   id: "Inventory agent",
-  description: "Calls the inventory agent to manage the crab stock.",
+  description: "Calls the inventory agent to help with tasks related to the store's inventory. This includes managing the stock of live and cooked crabs, updating inventory counts, and providing information on current stock levels.",
   inputSchema: z.object({
     topic: z.string()
   }),

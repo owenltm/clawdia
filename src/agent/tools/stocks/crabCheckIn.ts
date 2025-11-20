@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { createTool } from "@mastra/core/tools";
 
-import { inventoryUseCase } from "@/src/usecases/inventory/inventory.usecase";
-import { CrabStatus } from "@/src/modules/crabs/types";
+import { inventoryUseCase } from "@/src/modules/inventory/inventory.usecase";
+import { CrabStatus } from "@/src/modules/inventory/types";
 
 export const crabCheckIn = createTool({
   id: "Crab Check In",
@@ -14,25 +14,26 @@ export const crabCheckIn = createTool({
   }),
   description: `Checks in a crab`,
   execute: async ({ context }) => {
-    try {
-      const newCrabCheckin = await inventoryUseCase.newCrabCheckin(
-        {
-          weight: context.weight.toString(),
-          supplier: context.supplier,
-          status: CrabStatus.IN,
-          checkInDate: context.checkInDate,
-        },
-        context.boxLabel,
-      );
+    return "Crab check-in functionality is currently disabled.";
+    // try {
+    //   const newCrabCheckin = await inventoryUseCase.newCrabCheckin(
+    //     {
+    //       weight: context.weight.toString(),
+    //       supplier: context.supplier,
+    //       status: CrabStatus.IN,
+    //       checkInDate: context.checkInDate,
+    //     },
+    //     context.boxLabel,
+    //   );
 
-      if(!newCrabCheckin) {
-        return "Error during crab check-in, please try again later.";
-      }
+    //   if(!newCrabCheckin) {
+    //     return "Error during crab check-in, please try again later.";
+    //   }
 
-      return `Crab successfully checked in with ID: ${newCrabCheckin}`;
-    } catch (error) {
-      console.error("Error during crab check-in:", error);
-      return "Error during crab check-in, please try again later.";
-    }
+    //   return `Crab successfully checked in with ID: ${newCrabCheckin}`;
+    // } catch (error) {
+    //   console.error("Error during crab check-in:", error);
+    //   return "Error during crab check-in, please try again later.";
+    // }
   },
 });

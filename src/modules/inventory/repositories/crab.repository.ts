@@ -1,36 +1,42 @@
-import { and, asc, desc, eq, isNull } from "drizzle-orm";
-import { db } from "../../db";
-import { crabs, type Crab, type NewCrab } from "./crab.schema";
-import type { CreateCrabInput, UpdateCrabInput, ListCrabsParams } from "./types";
-export type { CreateCrabInput, UpdateCrabInput, ListCrabsParams } from "./types";
+import { and, asc, desc, eq, isNull, gte, lte } from "drizzle-orm";
+import { db } from "../../../db";
+import { crabs, Crab as PersistedCrab, type NewCrab } from "../schemas/crab.schema";
+import { Crab } from "../entities/crab.entity";
+import type { CreateCrabInput, UpdateCrabInput, ListCrabsParams } from "../types";
 
 export const CrabRepository = {
   async list(params: ListCrabsParams = {}): Promise<Crab[]> {
-    const { status, boxId, orderBy = "createdAt", direction = "desc" } = params;
+    const { status, boxId, checkedInAfter, checkedInBefore, checkedOutAfter, checkedOutBefore, orderBy = "createdAt", direction = "desc" } = params;
 
     const where = [];
     if (status) where.push(eq(crabs.status, status));
     if (boxId === null) where.push(isNull(crabs.boxId));
+    if (checkedInAfter) where.push(gte(crabs.checkInDate, checkedInAfter));
+    if (checkedInBefore) where.push(lte(crabs.checkInDate, checkedInBefore));
+    if (checkedOutAfter) where.push(gte(crabs.checkOutDate, checkedOutAfter));
+    if (checkedOutBefore) where.push(lte(crabs.checkOutDate, checkedOutBefore));
     else if (typeof boxId === "number") where.push(eq(crabs.boxId, boxId));
 
     const orderCol =
       orderBy === "updatedAt" ? crabs.updatedAt : orderBy === "weight" ? crabs.weight : crabs.createdAt;
 
-    return db
+    const result = await db
       .select()
       .from(crabs)
       .where(where.length ? (where.length === 1 ? where[0] : and(...where)) : undefined)
       .orderBy(direction === "asc" ? asc(orderCol) : desc(orderCol));
+
+    return result.map((row) => Crab.fromDatabase(row));
   },
 
   async get(id: number): Promise<Crab | undefined> {
     const rows = await db.select().from(crabs).where(eq(crabs.id, id)).limit(1);
-    return rows[0];
+    return Crab.fromDatabase(rows[0]);
   },
 
-  async getByBoxId(boxId: number): Promise<Crab> {
-    const rows = await db.select().from(crabs).where(eq(crabs.boxId, boxId)).limit(1);
-    return rows[0];
+  async getByBoxId(boxId: number): Promise<Crab[]> {
+    const rows = await db.select().from(crabs).where(eq(crabs.boxId, boxId));
+    return rows.map(Crab.fromDatabase);
   },
 
   async create(data: CreateCrabInput): Promise<number> {

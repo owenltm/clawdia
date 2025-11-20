@@ -1,13 +1,13 @@
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
-import { financeService } from "@/src/modules/finance/finance.service";
-import { FINANCE_EXPENSE_CATEGORY_VALUES, FinanceType } from "@/src/modules/finance/types";
+import { financeUseCase } from "@/src/modules/finance/finance.usecase";
+import { FINANCE_CATEGORY_VALUES, FinanceType } from "@/src/modules/finance/types";
 
 export const addExpenses = createTool({
   id: "Add Expenses",
   inputSchema: z.object({
     amount: z.number(),
-    category: z.enum(FINANCE_EXPENSE_CATEGORY_VALUES),
+    category: z.enum(FINANCE_CATEGORY_VALUES),
     description: z.string().optional(),
   }),
   description: `Adds expenses to the finance journal`,
@@ -15,12 +15,12 @@ export const addExpenses = createTool({
     // Create a new expense entry in the finance journal
     const newExpense = {
       type: FinanceType.EXPENSE,
-      amount: amount.toString(),
+      amount: amount,
       category,
       description,
     };
 
-    const expenseId = await financeService.create(newExpense);
+    const expenseId = await financeUseCase.create(newExpense);
 
     return { id: expenseId };
   },

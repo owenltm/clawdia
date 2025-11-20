@@ -1,0 +1,1 @@
+ALTER TABLE `crabs` ADD `notes` varchar(255);

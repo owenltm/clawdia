@@ -1,0 +1,1 @@
+ALTER TABLE `finance_journal` ADD `date` timestamp NOT NULL;

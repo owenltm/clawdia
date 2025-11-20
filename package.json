@@ -26,10 +26,18 @@
     "@ai-sdk/google": "^1.2.19",
     "@mastra/core": "^0.13.2",
     "@mastra/memory": "^0.12.2",
+    "@types/passport": "^1.0.17",
+    "@types/passport-jwt": "^4.0.1",
+    "@types/passport-local": "^1.0.38",
+    "bcryptjs": "^3.0.2",
     "dotenv": "^17.2.1",
     "drizzle-orm": "^0.44.4",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.3",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
     "zod": "^3.25.76"
   }
 }

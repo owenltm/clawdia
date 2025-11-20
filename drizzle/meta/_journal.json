@@ -43,6 +43,48 @@
       "when": 1756110615522,
       "tag": "0005_special_moon_knight",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1759290556486,
+      "tag": "0006_concerned_black_bolt",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1760344195234,
+      "tag": "0007_married_blue_marvel",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1761274450498,
+      "tag": "0008_typical_nitro",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1762231216188,
+      "tag": "0009_lyrical_ultragirl",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1762313471509,
+      "tag": "0010_hot_guardian",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1762324193699,
+      "tag": "0011_outstanding_edwin_jarvis",
+      "breakpoints": true
     }
   ]
 }
